@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:even_up_app/features/auth/login_screen.dart';
 
 void main() {
@@ -15,6 +16,14 @@ class EvenUpApp extends StatelessWidget {
         brightness: Brightness.light,
         primaryColor: CupertinoColors.activeBlue,
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''), // English
+      ],
       home: LoginScreen(),
     );
   }

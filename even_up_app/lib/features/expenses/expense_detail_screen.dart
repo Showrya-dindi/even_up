@@ -166,16 +166,12 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
   }
 
   Widget _buildSplitSection() {
-    // Fallback: If splitWith is empty but it's an 'Equally' split, assume all group members
-    List<String> splitWith = widget.expense.splitWith;
-    if (splitWith.isEmpty && widget.expense.splitType == 'Equally' && _members != null) {
-      splitWith = _members!.map((m) => m.id).toList();
-      debugPrint('ExpenseDetailScreen: Falling back to all group members for equally split');
-    }
-
-    final perPerson = splitWith.isNotEmpty 
-        ? widget.expense.amount / splitWith.length 
-        : widget.expense.amount;
+    final List<Map<String, dynamic>> splitWithRaw = widget.expense.splitWith;
+    
+    // If it's empty and 'Equally', we might want to show everyone, 
+    // but usually splitWith should be populated by the API.
+    
+    final bool isEqually = widget.expense.splitType == 'Equally';
 
     return CupertinoListSection.insetGrouped(
       header: const Text('Split Summary'),
@@ -185,19 +181,26 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
           subtitle: Text(widget.expense.splitType.toUpperCase()),
           leading: const Icon(CupertinoIcons.square_grid_2x2, color: CupertinoColors.systemGrey),
         ),
-        if (splitWith.isNotEmpty) ...[
+        if (splitWithRaw.isNotEmpty) ...[
           const CupertinoListTile(
             title: Text('Participants'),
             leading: Icon(CupertinoIcons.person_3_fill, color: CupertinoColors.systemGrey),
           ),
-          ...splitWith.map((id) => CupertinoListTile(
-            title: Text(_getMemberName(id)),
-            trailing: Text('\$${perPerson.toStringAsFixed(2)}'),
-            leading: const Padding(
-              padding: EdgeInsets.only(left: 16.0),
-              child: Icon(CupertinoIcons.person, size: 16, color: CupertinoColors.secondaryLabel),
-            ),
-          )),
+          ...splitWithRaw.map((data) {
+            final String id = data['userId']?.toString() ?? 'unknown';
+            final double share = isEqually 
+                ? widget.expense.amount / splitWithRaw.length
+                : (data['amount'] as num?)?.toDouble() ?? 0.0;
+                
+            return CupertinoListTile(
+              title: Text(_getMemberName(id)),
+              trailing: Text('\$${share.toStringAsFixed(2)}'),
+              leading: const Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Icon(CupertinoIcons.person, size: 16, color: CupertinoColors.secondaryLabel),
+              ),
+            );
+          }),
         ],
         const CupertinoListTile(
           title: Text('Status'),

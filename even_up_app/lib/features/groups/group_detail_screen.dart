@@ -161,29 +161,64 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               itemCount: expenses.length,
               itemBuilder: (context, index) {
                 final expense = expenses[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (context) => FutureBuilder<Group>(
-                            future: groupFuture,
-                            builder: (context, groupSnapshot) {
-                              return ExpenseDetailScreen(
-                                expense: expense,
-                                groupMembers: groupSnapshot.data?.members,
-                              );
-                            },
-                          ),
+                const currentUserId = 'local-user-123';
+                
+                String balanceText = '';
+                Color balanceColor = CupertinoColors.label;
+                
+                if (!expense.isUserInvolved(currentUserId)) {
+                  balanceText = 'not involved';
+                  balanceColor = CupertinoColors.secondaryLabel;
+                } else if (expense.paidBy == currentUserId) {
+                  final lentAmount = expense.amount - expense.getShareOf(currentUserId);
+                  if (lentAmount > 0) {
+                    balanceText = 'you lent \$${lentAmount.toStringAsFixed(2)}';
+                    balanceColor = CupertinoColors.systemGreen;
+                  } else {
+                    balanceText = 'you paid';
+                    balanceColor = CupertinoColors.secondaryLabel;
+                  }
+                } else {
+                  final myShare = expense.getShareOf(currentUserId);
+                  if (myShare > 0) {
+                    balanceText = 'you owe \$${myShare.toStringAsFixed(2)}';
+                    balanceColor = CupertinoColors.systemOrange;
+                  } else {
+                    balanceText = 'not involved';
+                    balanceColor = CupertinoColors.secondaryLabel;
+                  }
+                }
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => FutureBuilder<Group>(
+                          future: groupFuture,
+                          builder: (context, groupSnapshot) {
+                            return ExpenseDetailScreen(
+                              expense: expense,
+                              groupMembers: groupSnapshot.data?.members,
+                            );
+                          },
                         ),
-                      );
-                    },
-                    child: CupertinoListTile(
-                      leading: const Icon(CupertinoIcons.doc_text, color: CupertinoColors.activeBlue),
-                      title: Text(expense.description),
-                      subtitle: Text('Paid by ${expense.paidBy}'),
-                      trailing: Text('\$${expense.amount.toStringAsFixed(2)}'),
+                      ),
+                    );
+                  },
+                  child: CupertinoListTile(
+                    leading: const Icon(CupertinoIcons.doc_text, color: CupertinoColors.activeBlue),
+                    title: Text(expense.description),
+                    subtitle: Text('Paid by ${expense.paidBy == currentUserId ? 'you' : expense.paidBy}'),
+                    trailing: Text(
+                      balanceText,
+                      style: TextStyle(
+                        color: balanceColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
                     ),
-                  );
+                  ),
+                );
               },
             );
           },

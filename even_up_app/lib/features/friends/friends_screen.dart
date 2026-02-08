@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/friend.dart';
+import 'package:even_up_app/features/friends/add_friend_screen.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});
@@ -58,8 +59,13 @@ class _FriendsScreenState extends State<FriendsScreen> {
         middle: const Text('Friends'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () {
-            // TODO: Add friend
+          onPressed: () async {
+            final result = await Navigator.of(context).push<bool>(
+              CupertinoPageRoute(builder: (context) => const AddFriendScreen()),
+            );
+            if (result == true) {
+              _fetchFriends();
+            }
           },
           child: const Icon(CupertinoIcons.person_add),
         ),

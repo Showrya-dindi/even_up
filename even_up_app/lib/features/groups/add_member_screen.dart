@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/friend.dart';
 import 'package:even_up_app/core/models/group.dart';
+import 'package:even_up_app/core/active_state.dart';
 
 class AddMemberScreen extends StatefulWidget {
   final Group group;
@@ -57,6 +58,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
       if (response.statusCode == 200) {
         if (!mounted) return;
+        activeGroupState.notifyGroupsChanged();
         Navigator.pop(context, true);
       } else {
         throw Exception('Failed to add members');
