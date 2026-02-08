@@ -506,6 +506,420 @@
         }
       ],
       "createdAt": "2026-02-06T21:18:04.385Z"
+    },
+    {
+      "PK": "GROUP#1770411690077",
+      "SK": "EXPENSE#1770415035656",
+      "description": "Sample exp from emulator",
+      "amount": 124,
+      "paidBy": "friend-3",
+      "splitType": "Exact",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 31
+        },
+        {
+          "userId": "friend-4",
+          "amount": 32
+        },
+        {
+          "userId": "friend-3",
+          "amount": 31
+        },
+        {
+          "userId": "friend-2",
+          "amount": 30
+        }
+      ],
+      "createdAt": "2026-02-06T21:57:15.656Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1770447520903",
+      "description": "Lunch",
+      "amount": 30,
+      "paidBy": "friend-1",
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 10
+        },
+        {
+          "userId": "showrya",
+          "amount": 10
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 10
+        }
+      ],
+      "createdAt": "2026-02-07T06:58:40.903Z"
+    },
+    {
+      "PK": "GROUP#1770411662988",
+      "SK": "EXPENSE#1770447785627",
+      "description": "breakfast",
+      "amount": 120,
+      "paidBy": "friend-2",
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 40
+        },
+        {
+          "userId": "friend-3",
+          "amount": 40
+        },
+        {
+          "userId": "friend-1",
+          "amount": 40
+        }
+      ],
+      "createdAt": "2026-02-07T07:03:05.627Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1770447931661",
+      "description": "lunch",
+      "amount": 120,
+      "paidBy": "local-user-123",
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 10.91
+        },
+        {
+          "userId": "friend-2",
+          "amount": 10.91
+        },
+        {
+          "userId": "friend-3",
+          "amount": 10.91
+        },
+        {
+          "userId": "friend-1",
+          "amount": 10.91
+        },
+        {
+          "userId": "friend-4",
+          "amount": 10.91
+        },
+        {
+          "userId": "showrya",
+          "amount": 10.91
+        },
+        {
+          "userId": "friend-134",
+          "amount": 10.91
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 10.91
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 10.91
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 10.91
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 10.9
+        }
+      ],
+      "createdAt": "2026-02-07T07:05:31.661Z"
+    },
+    {
+      "PK": "GROUP#1770411690077",
+      "SK": "EXPENSE#1770448842205",
+      "description": "land buy",
+      "amount": 23164846,
+      "paidBy": "local-user-123",
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 5791211.5
+        },
+        {
+          "userId": "friend-4",
+          "amount": 5791211.5
+        },
+        {
+          "userId": "friend-3",
+          "amount": 5791211.5
+        },
+        {
+          "userId": "friend-2",
+          "amount": 5791211.5
+        }
+      ],
+      "createdAt": "2026-02-07T07:20:42.205Z"
+    },
+    {
+      "PK": "USER#FRIENDS",
+      "SK": "MEMBERS#harsha-vardhan-pv",
+      "email": "hh",
+      "name": "harsha vardhan pv",
+      "createdAt": "2026-02-07T07:32:04.072Z"
+    },
+    {
+      "PK": "USER#FRIENDS",
+      "SK": "MEMBERS#harsha",
+      "email": "hxhx",
+      "name": "harsha",
+      "createdAt": "2026-02-07T07:32:20.923Z"
+    },
+    {
+      "PK": "GROUP#1770406764184",
+      "SK": "MEMBERS#harsha-vardhan-pv",
+      "joinedAt": "2026-02-07T07:32:51.567Z"
+    },
+    {
+      "PK": "GROUP#1770406764184",
+      "SK": "MEMBERS#harsha",
+      "joinedAt": "2026-02-07T07:32:51.567Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1770456917757",
+      "description": "ugb",
+      "amount": 10,
+      "paidBy": "local-user-123",
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-2",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-3",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-1",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-4",
+          "amount": 0.91
+        },
+        {
+          "userId": "showrya",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-134",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 0.91
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 0.91
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 0.9
+        }
+      ],
+      "createdAt": "2026-02-07T09:35:17.757Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1770457458725",
+      "description": "sample",
+      "amount": 250,
+      "paidBy": "qjhwdkfnskf",
+      "splitType": "Exact",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 30
+        },
+        {
+          "userId": "friend-2",
+          "amount": 22.73
+        },
+        {
+          "userId": "friend-3",
+          "amount": 22.73
+        },
+        {
+          "userId": "friend-1",
+          "amount": 22.73
+        },
+        {
+          "userId": "friend-4",
+          "amount": 22.73
+        },
+        {
+          "userId": "showrya",
+          "amount": 22.73
+        },
+        {
+          "userId": "friend-134",
+          "amount": 22.73
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 22.73
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 22.73
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 22.73
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 15.43
+        }
+      ],
+      "createdAt": "2026-02-07T09:44:18.725Z"
+    },
+    {
+      "PK": "GROUP#1770406764184",
+      "SK": "EXPENSE#1770457663345",
+      "description": "Hi",
+      "amount": 500,
+      "paidBy": "local-user-123",
+      "splitType": "Exact",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 100
+        },
+        {
+          "userId": "friend-2",
+          "amount": 50
+        },
+        {
+          "userId": "friend-3",
+          "amount": 150
+        },
+        {
+          "userId": "harsha-vardhan-pv",
+          "amount": 100
+        },
+        {
+          "userId": "harsha",
+          "amount": 100
+        }
+      ],
+      "createdAt": "2026-02-07T09:47:43.345Z"
+    },
+    {
+      "PK": "GROUP#1769947087612",
+      "SK": "MEMBERS#showrya",
+      "joinedAt": "2026-02-07T10:41:47.466Z"
+    },
+    {
+      "PK": "GROUP#1769947087612",
+      "SK": "MEMBERS#harsha-vardhan-pv",
+      "joinedAt": "2026-02-07T10:41:47.466Z"
+    },
+    {
+      "PK": "GROUP#1769947087612",
+      "SK": "MEMBERS#harsha",
+      "joinedAt": "2026-02-07T10:41:47.466Z"
+    },
+    {
+      "PK": "USER#FRIENDS",
+      "SK": "MEMBERS#vishnu-vardhan-reddy",
+      "email": "test@email.com",
+      "name": "Vishnu vardhan reddy",
+      "createdAt": "2026-02-07T10:42:05.290Z"
+    },
+    {
+      "PK": "USER#FRIENDS",
+      "SK": "MEMBERS#dekketi-g-c-vikram-reddy",
+      "email": "sample@gmail.com",
+      "name": "Dekketi G C Vikram reddy",
+      "createdAt": "2026-02-07T10:42:19.514Z"
+    },
+    {
+      "PK": "GROUP#1769947087612",
+      "SK": "MEMBERS#vishnu-vardhan-reddy",
+      "joinedAt": "2026-02-07T10:42:33.334Z"
+    },
+    {
+      "PK": "GROUP#1769947087612",
+      "SK": "MEMBERS#dekketi-g-c-vikram-reddy",
+      "joinedAt": "2026-02-07T10:42:33.335Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1770463603951",
+      "description": "Wxpense from new ui",
+      "amount": 856,
+      "paidBy": "friend-mawa",
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 77.82
+        },
+        {
+          "userId": "friend-2",
+          "amount": 77.82
+        },
+        {
+          "userId": "friend-3",
+          "amount": 77.82
+        },
+        {
+          "userId": "friend-1",
+          "amount": 77.82
+        },
+        {
+          "userId": "friend-4",
+          "amount": 77.82
+        },
+        {
+          "userId": "showrya",
+          "amount": 77.82
+        },
+        {
+          "userId": "friend-134",
+          "amount": 77.82
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 77.82
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 77.82
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 77.82
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 77.8
+        }
+      ],
+      "createdAt": "2026-02-07T11:26:43.951Z"
     }
   ]
 }

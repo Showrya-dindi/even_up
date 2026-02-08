@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
@@ -42,7 +43,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   Future<List<Expense>> _fetchExpenses() async {
     try {
       final response = await http.get(
-        Uri.parse('${AppConfig.baseUrl}/groups/${widget.group.id}/expenses')
+        Uri.parse('${AppConfig.baseUrl}/groups/${widget.group.id}/expenses'),
       );
 
       if (response.statusCode == 200) {
@@ -60,7 +61,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   Future<Group> _fetchGroupDetails() async {
     try {
       final response = await http.get(
-        Uri.parse('${AppConfig.baseUrl}/groups/${widget.group.id}')
+        Uri.parse('${AppConfig.baseUrl}/groups/${widget.group.id}'),
       );
 
       if (response.statusCode == 200) {
@@ -91,14 +92,19 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
         middle: FutureBuilder<Group>(
           future: groupFuture,
           builder: (context, snapshot) {
-            final name = snapshot.hasData ? snapshot.data!.name : widget.group.name;
-            final icon = snapshot.hasData ? snapshot.data!.icon : widget.group.icon;
+            final name = snapshot.hasData
+                ? snapshot.data!.name
+                : widget.group.name;
+            final icon = snapshot.hasData
+                ? snapshot.data!.icon
+                : widget.group.icon;
             return GestureDetector(
               onTap: () {
                 if (snapshot.hasData) {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (context) => GroupInfoScreen(group: snapshot.data!),
+                      builder: (context) =>
+                          GroupInfoScreen(group: snapshot.data!),
                     ),
                   );
                 }
@@ -152,7 +158,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(
-                child: Text('No expenses yet', style: TextStyle(color: CupertinoColors.secondaryLabel)),
+                child: Text(
+                  'No expenses yet',
+                  style: TextStyle(color: CupertinoColors.secondaryLabel),
+                ),
               );
             }
 
@@ -162,17 +171,18 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               itemBuilder: (context, index) {
                 final expense = expenses[index];
                 const currentUserId = 'local-user-123';
-                
+
                 String balanceText = '';
                 Color balanceColor = CupertinoColors.label;
-                
+
                 if (!expense.isUserInvolved(currentUserId)) {
                   balanceText = 'not involved';
                   balanceColor = CupertinoColors.secondaryLabel;
                 } else if (expense.paidBy == currentUserId) {
-                  final lentAmount = expense.amount - expense.getShareOf(currentUserId);
+                  final lentAmount =
+                      expense.amount - expense.getShareOf(currentUserId);
                   if (lentAmount > 0) {
-                    balanceText = 'you lent \$${lentAmount.toStringAsFixed(2)}';
+                    balanceText = 'you lent ₹${lentAmount.toStringAsFixed(2)}';
                     balanceColor = CupertinoColors.systemGreen;
                   } else {
                     balanceText = 'you paid';
@@ -181,7 +191,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                 } else {
                   final myShare = expense.getShareOf(currentUserId);
                   if (myShare > 0) {
-                    balanceText = 'you owe \$${myShare.toStringAsFixed(2)}';
+                    balanceText = 'you owe ₹${myShare.toStringAsFixed(2)}';
                     balanceColor = CupertinoColors.systemOrange;
                   } else {
                     balanceText = 'not involved';
@@ -206,9 +216,53 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                     );
                   },
                   child: CupertinoListTile(
-                    leading: const Icon(CupertinoIcons.doc_text, color: CupertinoColors.activeBlue),
-                    title: Text(expense.description),
-                    subtitle: Text('Paid by ${expense.paidBy == currentUserId ? 'you' : expense.paidBy}'),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    leadingSize: 50, // Increased to accommodate the date widget
+                    leading: Container(
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.systemGrey6,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            DateFormat(
+                              'MMM',
+                            ).format(expense.createdAt).toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: CupertinoColors.secondaryLabel,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            DateFormat('dd').format(expense.createdAt),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: CupertinoColors.label,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Text(
+                        expense.description,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${expense.paidBy == currentUserId ? "You" : expense.paidBy} paid ₹${expense.amount.toStringAsFixed(2)}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
                     trailing: Text(
                       balanceText,
                       style: TextStyle(
@@ -226,7 +280,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       ),
     );
   }
-
 
   IconData _getGroupIcon(String? icon) {
     switch (icon) {

@@ -12,7 +12,7 @@ class ExpenseDetailScreen extends StatefulWidget {
   final List<GroupMember>? groupMembers;
 
   const ExpenseDetailScreen({
-    super.key, 
+    super.key,
     required this.expense,
     this.groupMembers,
   });
@@ -27,7 +27,9 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
   @override
   void initState() {
     super.initState();
-    debugPrint('ExpenseDetailScreen: SplitWith indices: ${widget.expense.splitWith}');
+    debugPrint(
+      'ExpenseDetailScreen: SplitWith indices: ${widget.expense.splitWith}',
+    );
     _members = widget.groupMembers;
     if (_members == null && widget.expense.groupId != null) {
       _fetchGroupMembers();
@@ -38,7 +40,9 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
   void didUpdateWidget(ExpenseDetailScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.groupMembers != _members && widget.groupMembers != null) {
-      debugPrint('ExpenseDetailScreen: Updated members from widget: ${widget.groupMembers?.length}');
+      debugPrint(
+        'ExpenseDetailScreen: Updated members from widget: ${widget.groupMembers?.length}',
+      );
       setState(() {
         _members = widget.groupMembers;
       });
@@ -50,22 +54,26 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
       debugPrint('ExpenseDetailScreen: Cannot fetch members - groupId is null');
       return;
     }
-    
+
     try {
       final url = '${AppConfig.baseUrl}/groups/${widget.expense.groupId}';
       debugPrint('ExpenseDetailScreen: Fetching members from $url');
       final response = await http.get(Uri.parse(url));
-      
+
       if (response.statusCode == 200) {
         final group = Group.fromJson(jsonDecode(response.body));
-        debugPrint('ExpenseDetailScreen: Fetched ${group.members?.length} members for group ${group.id}');
+        debugPrint(
+          'ExpenseDetailScreen: Fetched ${group.members?.length} members for group ${group.id}',
+        );
         if (mounted) {
           setState(() {
             _members = group.members;
           });
         }
       } else {
-        debugPrint('ExpenseDetailScreen: Failed to fetch group: ${response.statusCode}');
+        debugPrint(
+          'ExpenseDetailScreen: Failed to fetch group: ${response.statusCode}',
+        );
       }
     } catch (e) {
       debugPrint('ExpenseDetailScreen: Error fetching group members: $e');
@@ -74,12 +82,16 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
 
   String _getMemberName(String id) {
     if (_members == null || _members!.isEmpty) {
-      debugPrint('ExpenseDetailScreen: Members list empty/null when looking up $id');
+      debugPrint(
+        'ExpenseDetailScreen: Members list empty/null when looking up $id',
+      );
       return id;
     }
     final member = _members!.where((m) => m.id == id).firstOrNull;
     if (member == null) {
-      debugPrint('ExpenseDetailScreen: Member $id not found in current members list');
+      debugPrint(
+        'ExpenseDetailScreen: Member $id not found in current members list',
+      );
     }
     return member?.name ?? id;
   }
@@ -87,12 +99,10 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final DateFormat formatter = DateFormat('MMMM d, yyyy');
-    
+
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemGroupedBackground,
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Expense Info'),
-      ),
+      navigationBar: const CupertinoNavigationBar(middle: Text('Expense Info')),
       child: SafeArea(
         child: ListView(
           children: [
@@ -128,15 +138,12 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
         const SizedBox(height: 16),
         Text(
           widget.expense.description,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
-          '\$${widget.expense.amount.toStringAsFixed(2)}',
+          '₹${widget.expense.amount.toStringAsFixed(2)}',
           style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w600,
@@ -154,12 +161,18 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
         CupertinoListTile(
           title: const Text('Paid by'),
           subtitle: Text(_getMemberName(widget.expense.paidBy)),
-          leading: const Icon(CupertinoIcons.person_fill, color: CupertinoColors.systemGrey),
+          leading: const Icon(
+            CupertinoIcons.person_fill,
+            color: CupertinoColors.systemGrey,
+          ),
         ),
         CupertinoListTile(
           title: const Text('Date'),
           subtitle: Text(formatter.format(widget.expense.createdAt)),
-          leading: const Icon(CupertinoIcons.calendar, color: CupertinoColors.systemGrey),
+          leading: const Icon(
+            CupertinoIcons.calendar,
+            color: CupertinoColors.systemGrey,
+          ),
         ),
       ],
     );
@@ -167,10 +180,10 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
 
   Widget _buildSplitSection() {
     final List<Map<String, dynamic>> splitWithRaw = widget.expense.splitWith;
-    
-    // If it's empty and 'Equally', we might want to show everyone, 
+
+    // If it's empty and 'Equally', we might want to show everyone,
     // but usually splitWith should be populated by the API.
-    
+
     final bool isEqually = widget.expense.splitType == 'Equally';
 
     return CupertinoListSection.insetGrouped(
@@ -179,25 +192,35 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
         CupertinoListTile(
           title: const Text('Split Type'),
           subtitle: Text(widget.expense.splitType.toUpperCase()),
-          leading: const Icon(CupertinoIcons.square_grid_2x2, color: CupertinoColors.systemGrey),
+          leading: const Icon(
+            CupertinoIcons.square_grid_2x2,
+            color: CupertinoColors.systemGrey,
+          ),
         ),
         if (splitWithRaw.isNotEmpty) ...[
           const CupertinoListTile(
             title: Text('Participants'),
-            leading: Icon(CupertinoIcons.person_3_fill, color: CupertinoColors.systemGrey),
+            leading: Icon(
+              CupertinoIcons.person_3_fill,
+              color: CupertinoColors.systemGrey,
+            ),
           ),
           ...splitWithRaw.map((data) {
             final String id = data['userId']?.toString() ?? 'unknown';
-            final double share = isEqually 
+            final double share = isEqually
                 ? widget.expense.amount / splitWithRaw.length
                 : (data['amount'] as num?)?.toDouble() ?? 0.0;
-                
+
             return CupertinoListTile(
               title: Text(_getMemberName(id)),
-              trailing: Text('\$${share.toStringAsFixed(2)}'),
+              trailing: Text('₹${share.toStringAsFixed(2)}'),
               leading: const Padding(
                 padding: EdgeInsets.only(left: 16.0),
-                child: Icon(CupertinoIcons.person, size: 16, color: CupertinoColors.secondaryLabel),
+                child: Icon(
+                  CupertinoIcons.person,
+                  size: 16,
+                  color: CupertinoColors.secondaryLabel,
+                ),
               ),
             );
           }),
@@ -205,7 +228,10 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
         const CupertinoListTile(
           title: Text('Status'),
           subtitle: Text('Pending Settlement'),
-          leading: Icon(CupertinoIcons.info_circle, color: CupertinoColors.systemOrange),
+          leading: Icon(
+            CupertinoIcons.info_circle,
+            color: CupertinoColors.systemOrange,
+          ),
         ),
       ],
     );
