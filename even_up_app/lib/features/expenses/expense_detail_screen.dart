@@ -6,6 +6,7 @@ import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/expense.dart';
 import 'package:even_up_app/core/models/group.dart';
 import 'package:even_up_app/core/models/group_member.dart';
+import 'package:even_up_app/features/expenses/add_expense_screen.dart';
 
 class ExpenseDetailScreen extends StatefulWidget {
   final Expense expense;
@@ -102,7 +103,30 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
 
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemGroupedBackground,
-      navigationBar: const CupertinoNavigationBar(middle: Text('Expense Info')),
+      navigationBar: CupertinoNavigationBar(
+        middle: const Text('Expense Info'),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: const Text('Edit'),
+          onPressed: () async {
+            final result = await Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) => AddExpenseScreen(
+                  groupId: widget.expense.groupId,
+                  expense: widget.expense,
+                ),
+              ),
+            );
+            if (result == true) {
+              // If edited, we should probably pop or refresh. 
+              // For now, let's pop back to group detail so it refreshes everything.
+              if (mounted) {
+                Navigator.of(context).pop(true);
+              }
+            }
+          },
+        ),
+      ),
       child: SafeArea(
         child: ListView(
           children: [
@@ -201,7 +225,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
           const CupertinoListTile(
             title: Text('Participants'),
             leading: Icon(
-              CupertinoIcons.person_3_fill,
+              CupertinoIcons.person_2_fill,
               color: CupertinoColors.systemGrey,
             ),
           ),

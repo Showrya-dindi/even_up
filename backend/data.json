@@ -27,20 +27,57 @@
       "PK": "GROUP#1769941307889",
       "SK": "EXPENSE#1769941380993",
       "description": "iuo",
-      "amount": 890,
-      "splitType": "Exact",
+      "amount": 400,
+      "splitType": "Equally",
       "splitWith": [
         {
           "userId": "local-user-123",
-          "amount": 89
+          "amount": 36.36
+        },
+        {
+          "userId": "friend-2",
+          "amount": 36.36
         },
         {
           "userId": "friend-3",
-          "amount": 90
+          "amount": 36.36
+        },
+        {
+          "userId": "friend-1",
+          "amount": 36.36
+        },
+        {
+          "userId": "friend-4",
+          "amount": 36.36
+        },
+        {
+          "userId": "showrya",
+          "amount": 36.36
+        },
+        {
+          "userId": "friend-134",
+          "amount": 36.36
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 36.36
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 36.36
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 36.36
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 36.4
         }
       ],
       "paidBy": "local-user-123",
-      "createdAt": "2026-02-01T10:23:00.993Z"
+      "createdAt": "2026-02-01T10:23:00.993Z",
+      "updatedAt": "2026-02-08T12:19:23.812Z"
     },
     {
       "PK": "GROUP#1769941307889",
@@ -120,28 +157,58 @@
     {
       "PK": "GROUP#1769941307889",
       "SK": "EXPENSE#1770406364118",
-      "description": "sample expense",
-      "amount": 1024,
-      "paidBy": "local-user-123",
+      "description": "Simple test",
+      "amount": 21000,
       "splitType": "Equally",
       "splitWith": [
         {
-          "userId": "local-user-123"
+          "userId": "local-user-123",
+          "amount": 1909.09
         },
         {
-          "userId": "friend-2"
+          "userId": "friend-2",
+          "amount": 1909.09
         },
         {
-          "userId": "friend-3"
+          "userId": "friend-3",
+          "amount": 1909.09
         },
         {
-          "userId": "friend-1"
+          "userId": "friend-1",
+          "amount": 1909.09
         },
         {
-          "userId": "friend-4"
+          "userId": "friend-4",
+          "amount": 1909.09
+        },
+        {
+          "userId": "showrya",
+          "amount": 1909.09
+        },
+        {
+          "userId": "friend-134",
+          "amount": 1909.09
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 1909.09
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 1909.09
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 1909.09
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 1909.1
         }
       ],
-      "createdAt": "2026-02-06T19:32:44.118Z"
+      "paidBy": "local-user-123",
+      "createdAt": "2026-02-06T19:32:44.118Z",
+      "updatedAt": "2026-02-08T12:18:00.748Z"
     },
     {
       "PK": "GROUP#1770406764184",
@@ -920,6 +987,163 @@
         }
       ],
       "createdAt": "2026-02-07T11:26:43.951Z"
+    },
+    {
+      "PK": "FRIEND#friend-1770552615433",
+      "SK": "METADATA",
+      "id": "friend-1770552615433",
+      "name": "tyr",
+      "email": "ytr",
+      "createdAt": "2026-02-08T12:10:15.433Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1770553051520",
+      "description": "234",
+      "amount": 0,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 0
+        },
+        {
+          "userId": "friend-2",
+          "amount": 0
+        },
+        {
+          "userId": "friend-3",
+          "amount": 0
+        },
+        {
+          "userId": "friend-1",
+          "amount": 0
+        },
+        {
+          "userId": "friend-4",
+          "amount": 0
+        },
+        {
+          "userId": "showrya",
+          "amount": 0
+        },
+        {
+          "userId": "friend-134",
+          "amount": 0
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 0
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 0
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 0
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 0
+        }
+      ],
+      "paidBy": "local-user-123",
+      "createdAt": "2026-02-08T12:17:31.520Z"
+    },
+    {
+      "PK": "FRIEND#friend-1774672142061",
+      "SK": "METADATA",
+      "id": "friend-1774672142061",
+      "name": "abc",
+      "email": "abc",
+      "createdAt": "2026-03-28T04:29:02.061Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1774678912544",
+      "description": "sample dollar expense",
+      "amount": 10,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-2",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-3",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-1",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-4",
+          "amount": 0.91
+        },
+        {
+          "userId": "showrya",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-134",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-mawa",
+          "amount": 0.91
+        },
+        {
+          "userId": "qjhwdkfnskf",
+          "amount": 0.91
+        },
+        {
+          "userId": "jsehfdbvweiglrk",
+          "amount": 0.91
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 0.9
+        }
+      ],
+      "paidBy": "local-user-123",
+      "createdAt": "2026-03-28T06:21:52.544Z"
+    },
+    {
+      "PK": "GROUP#1769941307889",
+      "SK": "EXPENSE#1774685289195",
+      "description": "Salaar tickets",
+      "amount": 500,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 100
+        },
+        {
+          "userId": "friend-4",
+          "amount": 100
+        },
+        {
+          "userId": "friend-3",
+          "amount": 100
+        },
+        {
+          "userId": "friend-134",
+          "amount": 100
+        },
+        {
+          "userId": "friend-gadu",
+          "amount": 100
+        }
+      ],
+      "paidBy": "local-user-123",
+      "createdAt": "2026-03-28T08:08:09.195Z"
     }
   ]
 }

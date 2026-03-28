@@ -43,21 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Groups'),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.add_circled),
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              CupertinoPageRoute(builder: (context) => CreateGroupScreen()),
-            );
-            if (result == true) {
-              _refreshGroups();
-            }
-          },
-        ),
-      ),
+
       child: SafeArea(
         child: FutureBuilder<List<Group>>(
           future: _groupsFuture,
@@ -106,15 +92,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 CupertinoListSection.insetGrouped(
-                  header: const Text('Your Groups'),
+                  header: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Your Groups'),
+                      CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        minSize: 0,
+                        child: const Icon(CupertinoIcons.add_circled, size: 20),
+                        onPressed: () async {
+                          final result = await Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (context) => const CreateGroupScreen(),
+                            ),
+                          );
+                          if (result == true) {
+                            _refreshGroups();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                   children: filteredGroups.isEmpty 
                     ? [const Padding(padding: EdgeInsets.all(16.0), child: Text('No matching groups found', textAlign: TextAlign.center, style: TextStyle(color: CupertinoColors.secondaryLabel)))]
                     : filteredGroups.map((group) {
                         try {
                           return CupertinoListTile(
-                            leading: Icon(
-                              _getGroupIcon(group.icon),
-                              color: _getGroupIconColor(group.icon),
+                            leading: Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: _getGroupIconColor(group.icon),
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  _getGroupIcon(group.icon),
+                                  color: _getGroupIconColor(group.icon),
+                                  size: 20,
+                                ),
+                              ),
                             ),
                             title: Text((group.name as dynamic) is String ? group.name : 'Unnamed'),
                             subtitle: const Text('No expenses yet'),

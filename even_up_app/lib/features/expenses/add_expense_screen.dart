@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,10 +10,13 @@ import 'package:even_up_app/core/active_state.dart';
 import 'package:flutter/material.dart'
     show showModalBottomSheet, RoundedRectangleBorder, Radius;
 
+import 'package:even_up_app/core/models/expense.dart';
+
 class AddExpenseScreen extends StatefulWidget {
   final String? groupId;
   final CupertinoTabController? tabController;
-  const AddExpenseScreen({super.key, this.groupId, this.tabController});
+  final Expense? expense;
+  const AddExpenseScreen({super.key, this.groupId, this.tabController, this.expense});
 
   @override
   State<AddExpenseScreen> createState() => _AddExpenseScreenState();
@@ -28,21 +32,43 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   List<Group> _availableGroups = [];
   String? _selectedGroupId;
   bool _isFetchingGroups = false;
-  String _memberSearchQuery = '';
+
   Set<String> _selectedMemberIds = {};
   final Map<String, TextEditingController> _exactAmountControllers = {};
 
   String _paidByUserId = 'local-user-123';
   bool _isRecalculating = false;
   List<String> _memberOrder = [];
+  String? _selectedCurrencyVal;
+  String get _selectedCurrency => _selectedCurrencyVal ?? '₹';
 
   @override
   void initState() {
     super.initState();
-    _paidByUserId = 'local-user-123';
+    _paidByUserId = widget.expense?.paidBy ?? 'local-user-123';
     _availableGroups = [];
-    _selectedGroupId = widget.groupId ?? activeGroupState.currentGroupId;
+    _selectedGroupId = widget.expense?.groupId ?? widget.groupId ?? activeGroupState.currentGroupId;
     _groupScrollController = ScrollController();
+    
+    if (widget.expense != null) {
+      _descriptionController.text = widget.expense!.description;
+      _amountController.text = widget.expense!.amount.toStringAsFixed(2);
+      _splitType = widget.expense!.splitType;
+      
+      // Initialize split amounts if they exist
+      for (var split in widget.expense!.splitWith) {
+        final id = split['userId']?.toString();
+        if (id != null) {
+          final amt = (split['amount'] as num?)?.toDouble() ?? 0.0;
+          _exactAmountControllers[id] = TextEditingController(text: amt.toStringAsFixed(2))
+            ..addListener(_recalculateSplits);
+        }
+      }
+      _selectedMemberIds = widget.expense!.splitWith
+          .map((s) => s['userId']?.toString())
+          .whereType<String>()
+          .toSet();
+    }
 
     // Listen for changes in active group (e.g. when switching tabs)
     activeGroupState.addListener(_onActiveGroupChanged);
@@ -53,8 +79,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     _amountController.addListener(_recalculateSplits);
     widget.tabController?.addListener(_onTabChanged);
 
-    // Initial reset to ensure clean state
-    _resetState();
+    // Initial reset to ensure clean state - ONLY if not editing
+    if (widget.expense == null) {
+      _resetState();
+    }
   }
 
   @override
@@ -163,30 +191,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         if (lastController != null) {
           lastController.text = remainder.toStringAsFixed(2);
         }
-      } else {
-        // Exact split logic
-        double otherSum = 0.0;
-        for (int i = 0; i < sortedSelectedIds.length - 1; i++) {
-          final id = sortedSelectedIds[i];
-          final controller = _exactAmountControllers[id];
-          if (controller != null) {
-            final val = double.tryParse(controller.text) ?? 0.0;
-            otherSum += val;
-          }
-        }
-
-        final lastId = sortedSelectedIds.last;
-        final remaining = (totalAmount - otherSum).clamp(0.0, double.infinity);
-
-        final lastController = _exactAmountControllers[lastId];
-        if (lastController != null) {
-          final currentLastValStr = lastController.text;
-          final newLastValStr = remaining.toStringAsFixed(2);
-
-          if (currentLastValStr != newLastValStr) {
-            lastController.text = newLastValStr;
-          }
-        }
       }
     } catch (e) {
       debugPrint('Error recalculating splits: $e');
@@ -212,7 +216,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       );
 
       if (group != null && group.members != null) {
-        final List<String> newIds = group.members!.map((m) => m.id).toList();
+        final List<String> newIds = (group.members!.toList()
+          ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase())))
+          .map((m) => m.id).toList();
 
         // Use a local reference for _memberOrder to help DDC
         List<String> currentOrder = _memberOrder;
@@ -319,28 +325,34 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
       if (_splitType == 'Exact' && (currentSum - totalAmount).abs() > 0.01) {
         throw Exception(
-          'The sum of split amounts (₹${currentSum.toStringAsFixed(2)}) must equal the total amount (₹${totalAmount.toStringAsFixed(2)})',
+          'The sum of split amounts ($_selectedCurrency${currentSum.toStringAsFixed(2)}) must equal the total amount ($_selectedCurrency${totalAmount.toStringAsFixed(2)})',
         );
       }
 
       final expenseData = {
+        if (widget.expense != null) 'id': widget.expense!.id,
         'description': _descriptionController.text,
-        'amount': double.parse(_amountController.text),
+        'amount': totalAmount,
         'groupId': targetGroupId,
         'paidBy': _paidByUserId,
         'splitType': _splitType,
         'splitWith': splitWithData,
+        if (widget.expense != null) 'createdAt': widget.expense!.createdAt.toIso8601String(),
       };
 
       debugPrint('AddExpenseScreen: Saving expense with data: $expenseData');
 
-      final response = await http.post(
-        Uri.parse('${AppConfig.baseUrl}/expenses'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(expenseData),
-      );
+      final url = Uri.parse('${AppConfig.baseUrl}/expenses');
+      final response = await (widget.expense == null
+          ? http.post(url,
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode(expenseData))
+          : http.put(url,
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode(expenseData)));
 
-      if (response.statusCode == 201) {
+      debugPrint('AddExpenseScreen: Save response status: ${response.statusCode}');
+      if (response.statusCode == 201 || response.statusCode == 200) {
         if (!mounted) return;
 
         if (widget.groupId != null) {
@@ -399,11 +411,34 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     });
   }
 
+  String _getEmojiForDescription(String description) {
+    final lower = description.toLowerCase();
+    if (lower.contains('coffee') || lower.contains('cafe') || lower.contains('tea')) return '☕️';
+    if (lower.contains('food') || lower.contains('lunch') || lower.contains('dinner') || lower.contains('breakfast') || lower.contains('meal') || lower.contains('pizza') || lower.contains('burger') || lower.contains('restaurant')) return '🍔';
+    if (lower.contains('grocery') || lower.contains('groceries') || lower.contains('market') || lower.contains('supermarket')) return '🛒';
+    if (lower.contains('movie') || lower.contains('cinema') || lower.contains('ticket') || lower.contains('show')) return '🍿';
+    if (lower.contains('flight') || lower.contains('airport') || lower.contains('plane')) return '✈️';
+    if (lower.contains('taxi') || lower.contains('uber') || lower.contains('lyft') || lower.contains('cab')) return '🚕';
+    if (lower.contains('hotel') || lower.contains('airbnb') || lower.contains('stay')) return '🏨';
+    if (lower.contains('gas') || lower.contains('petrol') || lower.contains('fuel')) return '⛽️';
+    if (lower.contains('drink') || lower.contains('bar') || lower.contains('beer') || lower.contains('alcohol') || lower.contains('pub') || lower.contains('wine')) return '🍻';
+    if (lower.contains('party') || lower.contains('club') || lower.contains('fun')) return '🎉';
+    if (lower.contains('rent') || lower.contains('house') || lower.contains('apartment')) return '🏠';
+    if (lower.contains('utility') || lower.contains('bill') || lower.contains('electricity') || lower.contains('water') || lower.contains('internet')) return '💡';
+    if (lower.contains('game') || lower.contains('sport') || lower.contains('play')) return '🎮';
+    if (lower.contains('gift') || lower.contains('present') || lower.contains('birthday')) return '🎁';
+    if (lower.contains('med') || lower.contains('doctor') || lower.contains('pharmacy') || lower.contains('health')) return '💊';
+    if (lower.contains('trip') || lower.contains('travel') || lower.contains('vacation') || lower.contains('bus') || lower.contains('train')) return '🚌';
+    return '📝';
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('Add Expense'),
+        middle: _availableGroups.isEmpty && _isFetchingGroups
+            ? const CupertinoActivityIndicator()
+            : _buildGroupSelector(),
         trailing: _isLoading
             ? const CupertinoActivityIndicator()
             : CupertinoButton(
@@ -413,16 +448,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               ),
       ),
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (widget.groupId == null)
-                _availableGroups.isEmpty && _isFetchingGroups
-                    ? const SizedBox(
-                        height: 100,
-                        child: Center(child: CupertinoActivityIndicator()),
-                      )
-                    : _buildGroupSelector(),
+        child: Column(
+          children: [
               Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 24.0,
@@ -431,91 +458,153 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 child: Column(
                   children: [
                     Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '₹',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.w600,
-                              color: CupertinoColors.label.withOpacity(0.6),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          IntrinsicWidth(
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(minWidth: 60),
-                              child: CupertinoTextField(
-                                controller: _amountController,
-                                placeholder: '0',
-                                style: const TextStyle(
-                                  fontSize: 64,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -1,
-                                  color: CupertinoColors.label,
-                                ),
-                                placeholderStyle: TextStyle(
-                                  fontSize: 64,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -1,
-                                  color: CupertinoColors.systemGrey3,
-                                ),
-                                decoration: null,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
+                      child: AnimatedBuilder(
+                        animation: _amountController,
+                        builder: (context, child) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: _showCurrencySelector,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 4.0),
+                                  child: Text(
+                                    _selectedCurrency,
+                                    style: TextStyle(
+                                      fontSize: 48,
+                                      fontWeight: FontWeight.w500,
+                                      color: _amountController.text.isEmpty
+                                          ? CupertinoColors.systemGrey3
+                                          : CupertinoColors.label,
                                     ),
-                                textAlign: TextAlign.center,
-                                cursorColor: CupertinoColors.activeBlue,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
+                              const SizedBox(width: 8),
+                              IntrinsicWidth(
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Opacity(
+                                      opacity: 0.0,
+                                      child: Container(
+                                        constraints: const BoxConstraints(minWidth: 40),
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Text(
+                                          _amountController.text.isEmpty
+                                              ? '0'
+                                              : _amountController.text,
+                                          style: const TextStyle(
+                                            fontSize: 64,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: -2,
+                                            color: CupertinoColors.label,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: CupertinoTextField(
+                                        padding: EdgeInsets.zero,
+                                        controller: _amountController,
+                                        placeholder: '0',
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                                          TextInputFormatter.withFunction((oldValue, newValue) {
+                                            if (newValue.text.isEmpty) return newValue;
+                                            final value = double.tryParse(newValue.text);
+                                            if (value == null) return oldValue;
+                                            if (value > 10000000000) return oldValue;
+                                            return newValue;
+                                          }),
+                                        ],
+                                        style: const TextStyle(
+                                          fontSize: 64,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: -2,
+                                          color: CupertinoColors.label,
+                                        ),
+                                        placeholderStyle: const TextStyle(
+                                          fontSize: 64,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: -2,
+                                          color: CupertinoColors.systemGrey3,
+                                        ),
+                                        decoration: null,
+                                        keyboardType:
+                                            const TextInputType.numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        cursorColor: CupertinoColors.activeBlue,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 40),
                     Container(
-                      constraints: const BoxConstraints(maxWidth: 300),
+                      constraints: const BoxConstraints(maxWidth: 200),
                       child: CupertinoTextField(
                         controller: _descriptionController,
                         placeholder: 'What is this for?',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                           color: CupertinoColors.label,
                         ),
                         placeholderStyle: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                           color: CupertinoColors.secondaryLabel,
                         ),
                         decoration: BoxDecoration(
-                          color: CupertinoColors.systemGrey6,
-                          borderRadius: BorderRadius.circular(20),
+                          color: CupertinoColors.systemGrey6.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                          horizontal: 4,
+                          vertical: 10,
                         ),
-                        prefix: const Padding(
-                          padding: EdgeInsets.only(left: 12.0),
-                          child: Icon(
-                            CupertinoIcons.pencil,
-                            size: 16,
-                            color: CupertinoColors.systemGrey,
-                          ),
+                        prefix: AnimatedBuilder(
+                          animation: _descriptionController,
+                          builder: (context, child) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+                                  child: Text(
+                                    _getEmojiForDescription(_descriptionController.text),
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                ),
+                                Container(
+                                  height: 16,
+                                  width: 1,
+                                  color: CupertinoColors.systemGrey4,
+                                ),
+                              ],
+                            );
+                          },
                         ),
+                        suffix: const SizedBox(width: 39),
                       ),
                     ),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
               _buildSplitSummary(),
             ],
           ),
-        ),
       ),
     );
   }
@@ -527,17 +616,16 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     );
 
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 0.0),
-      child: Center(
-        child: GestureDetector(
-          onTap: () => _showGroupSelectionModal(),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: CupertinoColors.systemGrey5.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Row(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: GestureDetector(
+        onTap: widget.groupId == null ? () => _showGroupSelectionModal() : null,
+        child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: CupertinoColors.systemGrey6,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (currentGroup != null) ...[
@@ -576,16 +664,17 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       color: CupertinoColors.label,
                     ),
                   ),
-                const SizedBox(width: 8),
-                const Icon(
-                  CupertinoIcons.chevron_down,
-                  size: 14,
-                  color: CupertinoColors.secondaryLabel,
-                ),
+                if (widget.groupId == null) ...[
+                  const SizedBox(width: 8),
+                  const Icon(
+                    CupertinoIcons.chevron_down,
+                    size: 14,
+                    color: CupertinoColors.secondaryLabel,
+                  ),
+                ],
               ],
             ),
           ),
-        ),
       ),
     );
   }
@@ -628,6 +717,32 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     );
   }
 
+  void _showCurrencySelector() {
+    final currencies = ['₹', '\$', '€', '£', '¥'];
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Select Currency'),
+        actions: currencies.map((c) {
+          return CupertinoActionSheetAction(
+            onPressed: () {
+              setState(() {
+                _selectedCurrencyVal = c;
+              });
+              Navigator.pop(context);
+            },
+            child: Text(c, style: const TextStyle(fontSize: 20)),
+          );
+        }).toList(),
+        cancelButton: CupertinoActionSheetAction(
+          isDestructiveAction: true,
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSplitSummary() {
     final Group? currentGroup = _availableGroups.cast<Group?>().firstWhere(
       (g) => g?.id == _selectedGroupId,
@@ -636,24 +751,36 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
     if (currentGroup == null) return const SizedBox.shrink();
 
-    final visibleIds = _selectedMemberIds.toList();
-    // Ensure payer is in the list for display if not selected (though logic usually keeps them)
-    if (!visibleIds.contains(_paidByUserId)) {
-      visibleIds.insert(0, _paidByUserId);
-    }
-
+    final visibleIds = _memberOrder.toList();
     // Sort: Payer first, then others by original order
     visibleIds.sort((a, b) {
       if (a == _paidByUserId) return -1;
       if (b == _paidByUserId) return 1;
-      return _memberOrder.indexOf(a).compareTo(_memberOrder.indexOf(b));
+
+      final bool aSelected = _selectedMemberIds.contains(a);
+      final bool bSelected = _selectedMemberIds.contains(b);
+
+      if (aSelected && !bSelected) return -1;
+      if (!aSelected && bSelected) return 1;
+
+      final memberA = currentGroup.members?.firstWhere(
+        (m) => m.id == a,
+        orElse: () => GroupMember(id: a, name: 'Unknown', joinedAt: DateTime.now()),
+      );
+      final memberB = currentGroup.members?.firstWhere(
+        (m) => m.id == b,
+        orElse: () => GroupMember(id: b, name: 'Unknown', joinedAt: DateTime.now()),
+      );
+
+      return (memberA?.name.toLowerCase() ?? '').compareTo(memberB?.name.toLowerCase() ?? '');
     });
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -666,24 +793,127 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   letterSpacing: 0.5,
                 ),
               ),
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                minSize: 0,
-                child: const Text(
-                  'Edit',
-                  style: TextStyle(
+              if (_splitType != 'Exact')
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minSize: 0,
+                  child: Text(
+                    _selectedMemberIds.length == visibleIds.length 
+                        ? 'Deselect All' 
+                        : 'Select All',
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: CupertinoColors.activeBlue,
                   ),
                 ),
-                onPressed: _openSplitEditor,
+                onPressed: () {
+                  setState(() {
+                    if (_selectedMemberIds.length == visibleIds.length) {
+                      _selectedMemberIds = {_paidByUserId};
+                    } else {
+                      _selectedMemberIds = visibleIds.toSet();
+                    }
+                    _syncExactAmountControllers();
+                    _recalculateSplits();
+                  });
+                },
               ),
             ],
           ),
           const SizedBox(height: 12),
-          Container(
-            decoration: BoxDecoration(
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoSlidingSegmentedControl<String>(
+              groupValue: _splitType,
+              children: const {
+                'Equally': Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Equally', style: TextStyle(fontSize: 13)),
+                ),
+                'Exact': Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Exact Amount', style: TextStyle(fontSize: 13)),
+                ),
+              },
+              onValueChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    final bool isSwitchingToExact = value == 'Exact' && _splitType != 'Exact';
+                    _splitType = value; // Update type FIRST before clearing controllers
+                    
+                    if (isSwitchingToExact) {
+                      _selectedMemberIds = _memberOrder.toSet();
+                      _syncExactAmountControllers();
+                      for (var controller in _exactAmountControllers.values) {
+                        controller.clear();
+                      }
+                    }
+                    _recalculateSplits();
+                  });
+                }
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (_splitType == 'Exact') ...[
+            Builder(
+              builder: (context) {
+                final double totalAmount = double.tryParse(_amountController.text) ?? 0.0;
+                double exactSum = 0;
+                for (final id in _selectedMemberIds) {
+                  final val = double.tryParse(_exactAmountControllers[id]?.text ?? '') ?? 0.0;
+                  exactSum += val;
+                }
+                final double amountLeft = totalAmount - exactSum;
+                final bool isPerfect = amountLeft.abs() < 0.01;
+                
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '$_selectedCurrency${exactSum.toStringAsFixed(2)} of $_selectedCurrency${totalAmount.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: CupertinoColors.secondaryLabel,
+                      ),
+                    ),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isPerfect 
+                            ? CupertinoColors.systemGreen.withOpacity(0.15) 
+                            : CupertinoColors.systemRed.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        isPerfect 
+                            ? 'Fully split' 
+                            : (amountLeft > 0 
+                                ? '$_selectedCurrency${amountLeft.toStringAsFixed(2)} left' 
+                                : 'Over by $_selectedCurrency${amountLeft.abs().toStringAsFixed(2)}'),
+                        style: TextStyle(
+                          color: isPerfect ? CupertinoColors.systemGreen : CupertinoColors.systemRed,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+          ] else ...[
+            const SizedBox(height: 12),
+          ],
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 24.0, top: 4.0),
+              child: Container(
+                decoration: BoxDecoration(
               color: CupertinoColors.secondarySystemGroupedBackground,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
@@ -694,8 +924,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
               ],
             ),
-            child: Column(
-              children: visibleIds.asMap().entries.map((entry) {
+            child: SizedBox(
+              height: visibleIds.length * 64.0,
+              child: Stack(
+                children: visibleIds.asMap().entries.map((entry) {
                 final index = entry.key;
                 final id = entry.value;
                 final isLast = index == visibleIds.length - 1;
@@ -713,15 +945,60 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     ? (_exactAmountControllers[id]?.text ?? '0.00')
                     : '0.00';
 
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      ),
-                      child: Row(
-                        children: [
+                return AnimatedPositioned(
+                  key: ValueKey(id),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  top: index * 64.0,
+                  left: 0,
+                  right: 0,
+                  height: 64.0,
+                  child: Column(
+                    children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onLongPress: () {
+                        setState(() {
+                          _paidByUserId = id;
+                          _selectedMemberIds.add(id);
+                          _recalculateSplits();
+                        });
+                      },
+                      onTap: () {
+                        setState(() {
+                          if (_splitType == 'Exact') return;
+                          
+                          if (_selectedMemberIds.contains(id)) {
+                            if (_selectedMemberIds.length > 1) {
+                              _selectedMemberIds.remove(id);
+                            }
+                          } else {
+                            _selectedMemberIds.add(id);
+                          }
+                          _recalculateSplits();
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Opacity(
+                          opacity: _splitType == 'Exact' || _selectedMemberIds.contains(id) ? 1.0 : 0.4,
+                          child: Row(
+                            children: [
+                              if (_splitType != 'Exact') ...[
+                                Icon(
+                                  _selectedMemberIds.contains(id)
+                                      ? CupertinoIcons.check_mark_circled_solid
+                                      : CupertinoIcons.circle,
+                                  color: _selectedMemberIds.contains(id)
+                                      ? CupertinoColors.activeBlue
+                                      : CupertinoColors.systemGrey3,
+                                  size: 24,
+                                ),
+                                const SizedBox(width: 12),
+                              ],
                           Container(
                             width: 38,
                             height: 38,
@@ -753,14 +1030,16 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  member?.name ?? 'Unknown',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: CupertinoColors.label,
+                                  Text(
+                                    member?.name ?? 'Unknown',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: CupertinoColors.label,
+                                    ),
                                   ),
-                                ),
                                 if (isPayer)
                                   const Text(
                                     'Paid bill',
@@ -773,420 +1052,65 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                               ],
                             ),
                           ),
-                          Text(
-                            '₹$share',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: CupertinoColors.label,
-                            ),
-                          ),
+                          _splitType == 'Exact' && _selectedMemberIds.contains(id)
+                              ? SizedBox(
+                                  width: 90,
+                                  height: 32,
+                                  child: CupertinoTextField(
+                                    controller: _exactAmountControllers[id],
+                                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                    textAlign: TextAlign.right,
+                                    padding: const EdgeInsets.only(right: 8.0, top: 6, bottom: 6),
+                                    prefix: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Text(
+                                        _selectedCurrency,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: CupertinoColors.secondaryLabel,
+                                        ),
+                                      ),
+                                    ),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: CupertinoColors.label,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: CupertinoColors.systemBackground,
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(color: CupertinoColors.systemGrey4),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {});
+                                    },
+                                  ),
+                                )
+                              : Text(
+                                  '$_selectedCurrency$share',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: CupertinoColors.label,
+                                  ),
+                                ),
                         ],
                       ),
+                     ),
                     ),
-                    if (!isLast)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 66.0),
-                        child: Container(
-                          height: 1,
-                          color: CupertinoColors.systemGrey6,
-                        ),
-                      ),
+                    ),
                   ],
-                );
+                ),
+               );
               }).toList(),
             ),
           ),
-          const SizedBox(height: 32),
+          ),
+              ),
+          ),
         ],
       ),
-    );
-  }
-
-  void _openSplitEditor() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: CupertinoColors.systemBackground,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => StatefulBuilder(
-        builder: (context, sheetSetState) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.75,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 12.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        child: const Text('Cancel'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      const Text(
-                        'Edit Split',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        child: const Text(
-                          'Done',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(height: 1, color: CupertinoColors.separator),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: _buildSplitEditorContent(sheetSetState),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSplitEditorContent(StateSetter sheetSetState) {
-    final Group? currentGroup = _availableGroups.cast<Group?>().firstWhere(
-      (g) => g?.id == _selectedGroupId,
-      orElse: () => _availableGroups.isNotEmpty ? _availableGroups.first : null,
-    );
-
-    if (currentGroup == null || _memberOrder == null || _memberOrder.isEmpty)
-      return const SizedBox.shrink();
-
-    final visibleEntries = _memberOrder.asMap().entries.where((entry) {
-      final String id = entry.value;
-      final member = currentGroup.members!.firstWhere((m) => m.id == id);
-      final query = _memberSearchQuery.toLowerCase();
-      return query.isEmpty || member.name.toLowerCase().contains(query);
-    }).toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 16.0,
-            bottom: 8.0,
-          ),
-          child: Row(
-            children: [
-              SizedBox(
-                height: 32,
-                child: CupertinoSlidingSegmentedControl<String>(
-                  groupValue: _splitType,
-                  children: const {
-                    'Equally': Text('Equal', style: TextStyle(fontSize: 12)),
-                    'Exact': Text('Exact', style: TextStyle(fontSize: 12)),
-                  },
-                  onValueChanged: (value) {
-                    if (value != null) {
-                      sheetSetState(() {});
-                      setState(() {
-                        _splitType = value;
-                        _recalculateSplits();
-                      });
-                    }
-                  },
-                ),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  const Text(
-                    'Select All',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: CupertinoColors.label,
-                    ),
-                  ),
-                  CupertinoCheckbox(
-                    value: _selectedMemberIds.length == _memberOrder.length,
-                    onChanged: (bool? value) {
-                      sheetSetState(() {});
-                      setState(() {
-                        if (value == true) {
-                          _selectedMemberIds = _memberOrder.toSet();
-                        } else {
-                          if (_memberOrder.isNotEmpty) {
-                            _selectedMemberIds = {_memberOrder.first};
-                          }
-                        }
-                        _syncExactAmountControllers();
-                        _recalculateSplits();
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: CupertinoSearchTextField(
-            placeholder: 'Find friends...',
-            onChanged: (value) {
-              sheetSetState(() {});
-              setState(() => _memberSearchQuery = value);
-            },
-          ),
-        ),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            const itemWidth = 80.0;
-            const itemHeight = 135.0;
-            const spacing = 12.0;
-            const runSpacing = 10.0;
-
-            final double availableWidth = constraints.maxWidth - 32.0;
-            int columns = (availableWidth + spacing) ~/ (itemWidth + spacing);
-            if (columns < 1) columns = 1;
-
-            final int rows = (visibleEntries.length / columns).ceil();
-            final double totalHeight =
-                rows * itemHeight + (rows > 0 ? (rows - 1) * runSpacing : 0);
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: SizedBox(
-                height: totalHeight,
-                child: Stack(
-                  children: visibleEntries.asMap().entries.map((listEntry) {
-                    final int visualIndex = listEntry.key;
-                    final MapEntry<int, String> realEntry = listEntry.value;
-                    final int realIndex = realEntry.key;
-                    final String id = realEntry.value;
-
-                    final member = currentGroup.members!.firstWhere(
-                      (m) => m.id == id,
-                    );
-                    final isSelected = _selectedMemberIds.contains(id);
-                    // final isPayer = id == _paidByUserId; // Unused
-                    // Actually, realIndex == 0 logic for Payer relied on _memberOrder sorted.
-                    // Yes, _memberOrder[0] is payer. so realIndex == 0.
-                    final isFirstInOrder = realIndex == 0;
-
-                    final int row = visualIndex ~/ columns;
-                    final int col = visualIndex % columns;
-
-                    final double left = col * (itemWidth + spacing);
-                    final double top = row * (itemHeight + runSpacing);
-
-                    return AnimatedPositioned(
-                      key: ValueKey(id),
-                      left: left,
-                      top: top,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOutCubic,
-                      child: SizedBox(
-                        width: itemWidth,
-                        height: itemHeight,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Stack(
-                              children: [
-                                GestureDetector(
-                                  onLongPress: () {
-                                    sheetSetState(() {});
-                                    setState(() {
-                                      final String movedId = _memberOrder
-                                          .removeAt(realIndex);
-                                      _memberOrder.insert(0, movedId);
-                                      _paidByUserId = _memberOrder.first;
-                                      _recalculateSplits();
-                                    });
-                                  },
-                                  onTap: () {
-                                    sheetSetState(() {});
-                                    setState(() {
-                                      if (isSelected) {
-                                        if (_selectedMemberIds.length > 1) {
-                                          _selectedMemberIds.remove(id);
-                                          if (id != _memberOrder.first) {
-                                            _memberOrder.remove(id);
-                                            _memberOrder.add(id);
-                                          }
-                                        }
-                                      } else {
-                                        _selectedMemberIds.add(id);
-                                        _syncExactAmountControllers();
-                                      }
-                                      _recalculateSplits();
-                                    });
-                                  },
-                                  child: AnimatedScale(
-                                    scale: isSelected ? 1.0 : 0.95,
-                                    duration: const Duration(milliseconds: 200),
-                                    child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 300,
-                                      ),
-                                      width: 54,
-                                      height: 54,
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? CupertinoColors.activeBlue
-                                            : CupertinoColors.systemGrey5,
-                                        shape: BoxShape.circle,
-                                        border: isFirstInOrder
-                                            ? Border.all(
-                                                color: CupertinoColors
-                                                    .systemOrange,
-                                                width: 3,
-                                              )
-                                            : (isSelected
-                                                  ? Border.all(
-                                                      color: CupertinoColors
-                                                          .activeBlue,
-                                                      width: 2,
-                                                    )
-                                                  : Border.all(
-                                                      color: CupertinoColors
-                                                          .transparent,
-                                                      width: 0,
-                                                    )),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          member.name.isNotEmpty
-                                              ? member.name[0].toUpperCase()
-                                              : '?',
-                                          style: TextStyle(
-                                            color: isSelected
-                                                ? CupertinoColors.white
-                                                : CupertinoColors
-                                                      .secondaryLabel,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (isFirstInOrder)
-                                  Positioned(
-                                    right: 0,
-                                    bottom: 0,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(2),
-                                      decoration: const BoxDecoration(
-                                        color: CupertinoColors.systemOrange,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Text(
-                                        '₹',
-                                        style: TextStyle(
-                                          color: CupertinoColors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            SizedBox(
-                              height: 30,
-                              child: Center(
-                                child: Text(
-                                  isFirstInOrder
-                                      ? 'Paid by ${member.name}'
-                                      : member.name,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: isFirstInOrder || isSelected
-                                        ? FontWeight.w600
-                                        : FontWeight.w400,
-                                    color: isFirstInOrder
-                                        ? CupertinoColors.systemOrange
-                                        : (isSelected
-                                              ? CupertinoColors.label
-                                              : CupertinoColors.secondaryLabel),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (isSelected) ...[
-                              const SizedBox(height: 4),
-                              SizedBox(
-                                height: 24,
-                                child: CupertinoTextField(
-                                  controller: _exactAmountControllers[id],
-                                  placeholder: '0.00',
-                                  readOnly: _splitType == 'Equally',
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                  padding: EdgeInsets.zero,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: _splitType == 'Equally'
-                                        ? CupertinoColors.secondaryLabel
-                                        : CupertinoColors.label,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _splitType == 'Equally'
-                                        ? CupertinoColors.systemGrey5
-                                        : CupertinoColors.systemGrey6,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  onChanged: (_) {
-                                    // Trigger parent update for validation/display, and sheet update?
-                                    // Recalculate splits handled elsewhere?
-                                    // Usually validation happens on Save.
-                                    // If 'Exact', user types here.
-                                    // We should call recalculateSplits if we want to validate sum?
-                                    // _recalculateSplits handles 'Exact' sum check only on Save?
-                                    // No, lines 316 checks on Save.
-                                    // But lines 163-187 in _recalculateSplits handles Exact logic distribution? No, that IS the logic.
-                                    // But for Exact, user enters value manually. We don't need to recalculate distribution.
-                                    // But we should update state.
-                                  },
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
     );
   }
 
@@ -1200,7 +1124,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       case 'coffee':
         return CupertinoIcons.cart_fill;
       default:
-        return CupertinoIcons.person_3_fill;
+        return CupertinoIcons.person_2_fill;
     }
   }
 
