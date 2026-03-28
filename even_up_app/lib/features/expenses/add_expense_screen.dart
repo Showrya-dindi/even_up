@@ -237,7 +237,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             currentOrder.remove(_paidByUserId);
             currentOrder.insert(0, _paidByUserId);
           } else if (currentOrder.isNotEmpty) {
-            _paidByUserId = currentOrder.first;
+             // Only reset payer to first if the old payer is NOT in this new group at all
+             _paidByUserId = currentOrder.first;
           }
         }
 
@@ -605,9 +606,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               _buildSplitSummary(),
             ],
           ),
-      ),
-    );
+        ),
+      );
   }
+
 
   Widget _buildGroupSelector() {
     final Group? currentGroup = _availableGroups.cast<Group?>().firstWhere(
@@ -999,7 +1001,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                 ),
                                 const SizedBox(width: 12),
                               ],
-                          Container(
+                              Container(
                             width: 38,
                             height: 38,
                             decoration: BoxDecoration(

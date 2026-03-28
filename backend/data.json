@@ -1,463 +1,11 @@
 {
   "items": [
     {
-      "PK": "GROUP#1769941307889",
-      "SK": "METADATA",
-      "name": "Banglore days",
-      "icon": "group",
-      "createdBy": "local-user-123",
-      "createdAt": "2026-02-01T10:21:47.889Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#local-user-123",
-      "joinedAt": "2026-02-01T10:21:47.890Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#friend-2",
-      "joinedAt": "2026-02-01T10:22:13.053Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#friend-3",
-      "joinedAt": "2026-02-01T10:22:13.053Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1769941380993",
-      "description": "iuo",
-      "amount": 400,
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 36.36
-        },
-        {
-          "userId": "friend-2",
-          "amount": 36.36
-        },
-        {
-          "userId": "friend-3",
-          "amount": 36.36
-        },
-        {
-          "userId": "friend-1",
-          "amount": 36.36
-        },
-        {
-          "userId": "friend-4",
-          "amount": 36.36
-        },
-        {
-          "userId": "showrya",
-          "amount": 36.36
-        },
-        {
-          "userId": "friend-134",
-          "amount": 36.36
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 36.36
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 36.36
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 36.36
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 36.4
-        }
-      ],
-      "paidBy": "local-user-123",
-      "createdAt": "2026-02-01T10:23:00.993Z",
-      "updatedAt": "2026-02-08T12:19:23.812Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1769946817934",
-      "description": "ii",
-      "amount": 98,
-      "splitType": "Exact",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 9809
-        },
-        {
-          "userId": "friend-2",
-          "amount": 98.098
-        }
-      ],
-      "paidBy": "local-user-123",
-      "createdAt": "2026-02-01T11:53:37.934Z"
-    },
-    {
-      "PK": "GROUP#1769946856514",
-      "SK": "METADATA",
-      "name": "abc",
-      "icon": "group",
-      "createdBy": "local-user-123",
-      "createdAt": "2026-02-01T11:54:16.514Z"
-    },
-    {
-      "PK": "GROUP#1769946856514",
-      "SK": "MEMBERS#local-user-123",
-      "joinedAt": "2026-02-01T11:54:16.514Z"
-    },
-    {
-      "PK": "GROUP#1769946856514",
-      "SK": "MEMBERS#friend-1",
-      "joinedAt": "2026-02-01T11:54:16.514Z"
-    },
-    {
-      "PK": "GROUP#1769946856514",
-      "SK": "MEMBERS#friend-2",
-      "joinedAt": "2026-02-01T11:54:16.514Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "METADATA",
-      "name": "iu",
-      "icon": "group",
-      "createdBy": "local-user-123",
-      "createdAt": "2026-02-01T11:58:07.612Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#local-user-123",
-      "joinedAt": "2026-02-01T11:58:07.612Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#friend-2",
-      "joinedAt": "2026-02-01T11:58:07.612Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#friend-1",
-      "joinedAt": "2026-02-01T11:58:07.612Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#friend-1",
-      "joinedAt": "2026-02-01T12:02:26.613Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#friend-4",
-      "joinedAt": "2026-02-01T12:02:26.613Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770406364118",
-      "description": "Simple test",
-      "amount": 21000,
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 1909.09
-        },
-        {
-          "userId": "friend-2",
-          "amount": 1909.09
-        },
-        {
-          "userId": "friend-3",
-          "amount": 1909.09
-        },
-        {
-          "userId": "friend-1",
-          "amount": 1909.09
-        },
-        {
-          "userId": "friend-4",
-          "amount": 1909.09
-        },
-        {
-          "userId": "showrya",
-          "amount": 1909.09
-        },
-        {
-          "userId": "friend-134",
-          "amount": 1909.09
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 1909.09
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 1909.09
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 1909.09
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 1909.1
-        }
-      ],
-      "paidBy": "local-user-123",
-      "createdAt": "2026-02-06T19:32:44.118Z",
-      "updatedAt": "2026-02-08T12:18:00.748Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "METADATA",
-      "name": "Sample Group",
-      "icon": "group",
-      "createdBy": "local-user-123",
-      "createdAt": "2026-02-06T19:39:24.184Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "MEMBERS#local-user-123",
-      "joinedAt": "2026-02-06T19:39:24.184Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "MEMBERS#friend-2",
-      "joinedAt": "2026-02-06T19:39:24.184Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "MEMBERS#friend-3",
-      "joinedAt": "2026-02-06T19:39:24.184Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "EXPENSE#1770406809144",
-      "description": "Biryani ",
-      "amount": 234,
-      "paidBy": "local-user-123",
-      "splitType": "Exact",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 100
-        },
-        {
-          "userId": "friend-3",
-          "amount": 134
-        }
-      ],
-      "createdAt": "2026-02-06T19:40:09.144Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "EXPENSE#1770406837818",
-      "description": "Sample expense where i am not included",
-      "amount": 100,
-      "paidBy": "local-user-123",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "friend-2"
-        },
-        {
-          "userId": "friend-3"
-        }
-      ],
-      "createdAt": "2026-02-06T19:40:37.818Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770407376994",
-      "description": "Sample split",
-      "amount": 300,
-      "paidBy": "local-user-123",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123"
-        },
-        {
-          "userId": "friend-1"
-        },
-        {
-          "userId": "friend-4"
-        }
-      ],
-      "createdAt": "2026-02-06T19:49:36.994Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770407736413",
-      "description": "Movie ",
-      "amount": 343,
-      "paidBy": "friend-2",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123"
-        },
-        {
-          "userId": "friend-2"
-        },
-        {
-          "userId": "friend-4"
-        }
-      ],
-      "createdAt": "2026-02-06T19:55:36.413Z"
-    },
-    {
       "PK": "USER#FRIENDS",
       "SK": "MEMBERS#showrya",
       "email": "showry@email.com",
       "name": "showrya",
       "createdAt": "2026-02-06T20:33:29.532Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#showrya",
-      "joinedAt": "2026-02-06T20:35:50.735Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770410233780",
-      "description": "Sample exp",
-      "amount": 100,
-      "paidBy": "showrya",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123"
-        },
-        {
-          "userId": "friend-2"
-        },
-        {
-          "userId": "friend-3"
-        },
-        {
-          "userId": "friend-4"
-        }
-      ],
-      "createdAt": "2026-02-06T20:37:13.780Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770411307262",
-      "description": "Sample",
-      "amount": 122,
-      "paidBy": "friend-2",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 24.4
-        },
-        {
-          "userId": "friend-3",
-          "amount": 24.4
-        },
-        {
-          "userId": "friend-1",
-          "amount": 24.4
-        },
-        {
-          "userId": "friend-4",
-          "amount": 24.4
-        },
-        {
-          "userId": "showrya",
-          "amount": 24.4
-        }
-      ],
-      "createdAt": "2026-02-06T20:55:07.262Z"
-    },
-    {
-      "PK": "GROUP#1770411662988",
-      "SK": "METADATA",
-      "name": "kapu gropu",
-      "icon": "group",
-      "createdBy": "local-user-123",
-      "createdAt": "2026-02-06T21:01:02.988Z"
-    },
-    {
-      "PK": "GROUP#1770411662988",
-      "SK": "MEMBERS#local-user-123",
-      "joinedAt": "2026-02-06T21:01:02.989Z"
-    },
-    {
-      "PK": "GROUP#1770411662988",
-      "SK": "MEMBERS#friend-2",
-      "joinedAt": "2026-02-06T21:01:02.989Z"
-    },
-    {
-      "PK": "GROUP#1770411662988",
-      "SK": "MEMBERS#friend-3",
-      "joinedAt": "2026-02-06T21:01:02.989Z"
-    },
-    {
-      "PK": "GROUP#1770411662988",
-      "SK": "MEMBERS#friend-1",
-      "joinedAt": "2026-02-06T21:01:02.989Z"
-    },
-    {
-      "PK": "GROUP#1770411676278",
-      "SK": "METADATA",
-      "name": "kamma group",
-      "icon": "group",
-      "createdBy": "local-user-123",
-      "createdAt": "2026-02-06T21:01:16.278Z"
-    },
-    {
-      "PK": "GROUP#1770411676278",
-      "SK": "MEMBERS#local-user-123",
-      "joinedAt": "2026-02-06T21:01:16.278Z"
-    },
-    {
-      "PK": "GROUP#1770411676278",
-      "SK": "MEMBERS#friend-1",
-      "joinedAt": "2026-02-06T21:01:16.278Z"
-    },
-    {
-      "PK": "GROUP#1770411676278",
-      "SK": "MEMBERS#friend-4",
-      "joinedAt": "2026-02-06T21:01:16.278Z"
-    },
-    {
-      "PK": "GROUP#1770411676278",
-      "SK": "MEMBERS#showrya",
-      "joinedAt": "2026-02-06T21:01:16.278Z"
-    },
-    {
-      "PK": "GROUP#1770411690077",
-      "SK": "METADATA",
-      "name": "reddy group ",
-      "icon": "group",
-      "createdBy": "local-user-123",
-      "createdAt": "2026-02-06T21:01:30.077Z"
-    },
-    {
-      "PK": "GROUP#1770411690077",
-      "SK": "MEMBERS#local-user-123",
-      "joinedAt": "2026-02-06T21:01:30.077Z"
-    },
-    {
-      "PK": "GROUP#1770411690077",
-      "SK": "MEMBERS#friend-4",
-      "joinedAt": "2026-02-06T21:01:30.077Z"
-    },
-    {
-      "PK": "GROUP#1770411690077",
-      "SK": "MEMBERS#friend-3",
-      "joinedAt": "2026-02-06T21:01:30.077Z"
-    },
-    {
-      "PK": "GROUP#1770411690077",
-      "SK": "MEMBERS#friend-2",
-      "joinedAt": "2026-02-06T21:01:30.077Z"
     },
     {
       "PK": "USER#FRIENDS",
@@ -495,241 +43,6 @@
       "createdAt": "2026-02-06T21:09:18.191Z"
     },
     {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#friend-134",
-      "joinedAt": "2026-02-06T21:09:30.656Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#friend-mawa",
-      "joinedAt": "2026-02-06T21:09:30.656Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#qjhwdkfnskf",
-      "joinedAt": "2026-02-06T21:09:30.656Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#jsehfdbvweiglrk",
-      "joinedAt": "2026-02-06T21:09:30.656Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "MEMBERS#friend-gadu",
-      "joinedAt": "2026-02-06T21:09:30.656Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770412684385",
-      "description": "Sample",
-      "amount": 1234,
-      "paidBy": "local-user-123",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 112.18
-        },
-        {
-          "userId": "friend-2",
-          "amount": 112.18
-        },
-        {
-          "userId": "friend-3",
-          "amount": 112.18
-        },
-        {
-          "userId": "friend-1",
-          "amount": 112.18
-        },
-        {
-          "userId": "friend-4",
-          "amount": 112.18
-        },
-        {
-          "userId": "showrya",
-          "amount": 112.18
-        },
-        {
-          "userId": "friend-134",
-          "amount": 112.18
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 112.18
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 112.18
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 112.18
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 112.2
-        }
-      ],
-      "createdAt": "2026-02-06T21:18:04.385Z"
-    },
-    {
-      "PK": "GROUP#1770411690077",
-      "SK": "EXPENSE#1770415035656",
-      "description": "Sample exp from emulator",
-      "amount": 124,
-      "paidBy": "friend-3",
-      "splitType": "Exact",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 31
-        },
-        {
-          "userId": "friend-4",
-          "amount": 32
-        },
-        {
-          "userId": "friend-3",
-          "amount": 31
-        },
-        {
-          "userId": "friend-2",
-          "amount": 30
-        }
-      ],
-      "createdAt": "2026-02-06T21:57:15.656Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770447520903",
-      "description": "Lunch",
-      "amount": 30,
-      "paidBy": "friend-1",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 10
-        },
-        {
-          "userId": "showrya",
-          "amount": 10
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 10
-        }
-      ],
-      "createdAt": "2026-02-07T06:58:40.903Z"
-    },
-    {
-      "PK": "GROUP#1770411662988",
-      "SK": "EXPENSE#1770447785627",
-      "description": "breakfast",
-      "amount": 120,
-      "paidBy": "friend-2",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 40
-        },
-        {
-          "userId": "friend-3",
-          "amount": 40
-        },
-        {
-          "userId": "friend-1",
-          "amount": 40
-        }
-      ],
-      "createdAt": "2026-02-07T07:03:05.627Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770447931661",
-      "description": "lunch",
-      "amount": 120,
-      "paidBy": "local-user-123",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 10.91
-        },
-        {
-          "userId": "friend-2",
-          "amount": 10.91
-        },
-        {
-          "userId": "friend-3",
-          "amount": 10.91
-        },
-        {
-          "userId": "friend-1",
-          "amount": 10.91
-        },
-        {
-          "userId": "friend-4",
-          "amount": 10.91
-        },
-        {
-          "userId": "showrya",
-          "amount": 10.91
-        },
-        {
-          "userId": "friend-134",
-          "amount": 10.91
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 10.91
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 10.91
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 10.91
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 10.9
-        }
-      ],
-      "createdAt": "2026-02-07T07:05:31.661Z"
-    },
-    {
-      "PK": "GROUP#1770411690077",
-      "SK": "EXPENSE#1770448842205",
-      "description": "land buy",
-      "amount": 23164846,
-      "paidBy": "local-user-123",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 5791211.5
-        },
-        {
-          "userId": "friend-4",
-          "amount": 5791211.5
-        },
-        {
-          "userId": "friend-3",
-          "amount": 5791211.5
-        },
-        {
-          "userId": "friend-2",
-          "amount": 5791211.5
-        }
-      ],
-      "createdAt": "2026-02-07T07:20:42.205Z"
-    },
-    {
       "PK": "USER#FRIENDS",
       "SK": "MEMBERS#harsha-vardhan-pv",
       "email": "hh",
@@ -742,172 +55,6 @@
       "email": "hxhx",
       "name": "harsha",
       "createdAt": "2026-02-07T07:32:20.923Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "MEMBERS#harsha-vardhan-pv",
-      "joinedAt": "2026-02-07T07:32:51.567Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "MEMBERS#harsha",
-      "joinedAt": "2026-02-07T07:32:51.567Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770456917757",
-      "description": "ugb",
-      "amount": 10,
-      "paidBy": "local-user-123",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-2",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-3",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-1",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-4",
-          "amount": 0.91
-        },
-        {
-          "userId": "showrya",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-134",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 0.91
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 0.91
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 0.9
-        }
-      ],
-      "createdAt": "2026-02-07T09:35:17.757Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770457458725",
-      "description": "sample",
-      "amount": 250,
-      "paidBy": "qjhwdkfnskf",
-      "splitType": "Exact",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 30
-        },
-        {
-          "userId": "friend-2",
-          "amount": 22.73
-        },
-        {
-          "userId": "friend-3",
-          "amount": 22.73
-        },
-        {
-          "userId": "friend-1",
-          "amount": 22.73
-        },
-        {
-          "userId": "friend-4",
-          "amount": 22.73
-        },
-        {
-          "userId": "showrya",
-          "amount": 22.73
-        },
-        {
-          "userId": "friend-134",
-          "amount": 22.73
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 22.73
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 22.73
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 22.73
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 15.43
-        }
-      ],
-      "createdAt": "2026-02-07T09:44:18.725Z"
-    },
-    {
-      "PK": "GROUP#1770406764184",
-      "SK": "EXPENSE#1770457663345",
-      "description": "Hi",
-      "amount": 500,
-      "paidBy": "local-user-123",
-      "splitType": "Exact",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 100
-        },
-        {
-          "userId": "friend-2",
-          "amount": 50
-        },
-        {
-          "userId": "friend-3",
-          "amount": 150
-        },
-        {
-          "userId": "harsha-vardhan-pv",
-          "amount": 100
-        },
-        {
-          "userId": "harsha",
-          "amount": 100
-        }
-      ],
-      "createdAt": "2026-02-07T09:47:43.345Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#showrya",
-      "joinedAt": "2026-02-07T10:41:47.466Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#harsha-vardhan-pv",
-      "joinedAt": "2026-02-07T10:41:47.466Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#harsha",
-      "joinedAt": "2026-02-07T10:41:47.466Z"
     },
     {
       "PK": "USER#FRIENDS",
@@ -924,132 +71,12 @@
       "createdAt": "2026-02-07T10:42:19.514Z"
     },
     {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#vishnu-vardhan-reddy",
-      "joinedAt": "2026-02-07T10:42:33.334Z"
-    },
-    {
-      "PK": "GROUP#1769947087612",
-      "SK": "MEMBERS#dekketi-g-c-vikram-reddy",
-      "joinedAt": "2026-02-07T10:42:33.335Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770463603951",
-      "description": "Wxpense from new ui",
-      "amount": 856,
-      "paidBy": "friend-mawa",
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 77.82
-        },
-        {
-          "userId": "friend-2",
-          "amount": 77.82
-        },
-        {
-          "userId": "friend-3",
-          "amount": 77.82
-        },
-        {
-          "userId": "friend-1",
-          "amount": 77.82
-        },
-        {
-          "userId": "friend-4",
-          "amount": 77.82
-        },
-        {
-          "userId": "showrya",
-          "amount": 77.82
-        },
-        {
-          "userId": "friend-134",
-          "amount": 77.82
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 77.82
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 77.82
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 77.82
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 77.8
-        }
-      ],
-      "createdAt": "2026-02-07T11:26:43.951Z"
-    },
-    {
       "PK": "FRIEND#friend-1770552615433",
       "SK": "METADATA",
       "id": "friend-1770552615433",
       "name": "tyr",
       "email": "ytr",
       "createdAt": "2026-02-08T12:10:15.433Z"
-    },
-    {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1770553051520",
-      "description": "234",
-      "amount": 0,
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 0
-        },
-        {
-          "userId": "friend-2",
-          "amount": 0
-        },
-        {
-          "userId": "friend-3",
-          "amount": 0
-        },
-        {
-          "userId": "friend-1",
-          "amount": 0
-        },
-        {
-          "userId": "friend-4",
-          "amount": 0
-        },
-        {
-          "userId": "showrya",
-          "amount": 0
-        },
-        {
-          "userId": "friend-134",
-          "amount": 0
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 0
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 0
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 0
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 0
-        }
-      ],
-      "paidBy": "local-user-123",
-      "createdAt": "2026-02-08T12:17:31.520Z"
     },
     {
       "PK": "FRIEND#friend-1774672142061",
@@ -1060,90 +87,254 @@
       "createdAt": "2026-03-28T04:29:02.061Z"
     },
     {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1774678912544",
-      "description": "sample dollar expense",
-      "amount": 10,
-      "splitType": "Equally",
-      "splitWith": [
-        {
-          "userId": "local-user-123",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-2",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-3",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-1",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-4",
-          "amount": 0.91
-        },
-        {
-          "userId": "showrya",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-134",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-mawa",
-          "amount": 0.91
-        },
-        {
-          "userId": "qjhwdkfnskf",
-          "amount": 0.91
-        },
-        {
-          "userId": "jsehfdbvweiglrk",
-          "amount": 0.91
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 0.9
-        }
-      ],
-      "paidBy": "local-user-123",
-      "createdAt": "2026-03-28T06:21:52.544Z"
+      "PK": "GROUP#1774704382943",
+      "SK": "METADATA",
+      "name": "sample",
+      "icon": "group",
+      "createdBy": "local-user-123",
+      "createdAt": "2026-03-28T13:26:22.943Z"
     },
     {
-      "PK": "GROUP#1769941307889",
-      "SK": "EXPENSE#1774685289195",
-      "description": "Salaar tickets",
-      "amount": 500,
+      "PK": "GROUP#1774704382943",
+      "SK": "MEMBERS#friend-1770552615433",
+      "joinedAt": "2026-03-28T13:26:22.943Z"
+    },
+    {
+      "PK": "GROUP#1774704382943",
+      "SK": "MEMBERS#friend-1774672142061",
+      "joinedAt": "2026-03-28T13:26:22.943Z"
+    },
+    {
+      "PK": "GROUP#1774704382943",
+      "SK": "EXPENSE#1774704432348",
+      "description": "jh",
+      "amount": 987,
       "splitType": "Equally",
       "splitWith": [
         {
           "userId": "local-user-123",
-          "amount": 100
+          "amount": 493.5
         },
         {
-          "userId": "friend-4",
-          "amount": 100
-        },
-        {
-          "userId": "friend-3",
-          "amount": 100
-        },
-        {
-          "userId": "friend-134",
-          "amount": 100
-        },
-        {
-          "userId": "friend-gadu",
-          "amount": 100
+          "userId": "friend-1774672142061",
+          "amount": 493.5
         }
       ],
       "paidBy": "local-user-123",
-      "createdAt": "2026-03-28T08:08:09.195Z"
+      "createdAt": "2026-03-28T13:27:12.348Z"
+    },
+    {
+      "PK": "GROUP#1774704442772",
+      "SK": "METADATA",
+      "name": "sdf",
+      "icon": "group",
+      "createdBy": "local-user-123",
+      "createdAt": "2026-03-28T13:27:22.772Z"
+    },
+    {
+      "PK": "GROUP#1774704442772",
+      "SK": "MEMBERS#friend-1774672142061",
+      "joinedAt": "2026-03-28T13:27:22.772Z"
+    },
+    {
+      "PK": "GROUP#1774704442772",
+      "SK": "MEMBERS#friend-1770552615433",
+      "joinedAt": "2026-03-28T13:27:22.772Z"
+    },
+    {
+      "PK": "GROUP#1774704442772",
+      "SK": "EXPENSE#1774704465589",
+      "description": "3425",
+      "amount": 243,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 81
+        },
+        {
+          "userId": "friend-1774672142061",
+          "amount": 81
+        },
+        {
+          "userId": "friend-1770552615433",
+          "amount": 81
+        }
+      ],
+      "paidBy": "local-user-123",
+      "createdAt": "2026-03-28T13:27:45.589Z"
+    },
+    {
+      "PK": "GROUP#1774704517441",
+      "SK": "METADATA",
+      "name": "wet",
+      "icon": "group",
+      "createdBy": "local-user-123",
+      "createdAt": "2026-03-28T13:28:37.441Z"
+    },
+    {
+      "PK": "GROUP#1774704517441",
+      "SK": "MEMBERS#friend-1770552615433",
+      "joinedAt": "2026-03-28T13:28:37.441Z"
+    },
+    {
+      "PK": "GROUP#1774704517441",
+      "SK": "MEMBERS#friend-1774672142061",
+      "joinedAt": "2026-03-28T13:28:37.441Z"
+    },
+    {
+      "PK": "GROUP#1774704704757",
+      "SK": "METADATA",
+      "name": "rty",
+      "icon": "group",
+      "createdBy": "local-user-123",
+      "createdAt": "2026-03-28T13:31:44.757Z"
+    },
+    {
+      "PK": "GROUP#1774704704757",
+      "SK": "MEMBERS#friend-1770552615433",
+      "joinedAt": "2026-03-28T13:31:44.757Z"
+    },
+    {
+      "PK": "GROUP#1774704704757",
+      "SK": "MEMBERS#friend-1774672142061",
+      "joinedAt": "2026-03-28T13:31:44.757Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "METADATA",
+      "name": "sample group",
+      "icon": "group",
+      "createdBy": "local-user-123",
+      "createdAt": "2026-03-28T13:33:55.910Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "MEMBERS#local-user-123",
+      "joinedAt": "2026-03-28T13:33:55.910Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "MEMBERS#friend-1770552615433",
+      "joinedAt": "2026-03-28T13:33:55.910Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "MEMBERS#friend-1774672142061",
+      "joinedAt": "2026-03-28T13:33:55.910Z"
+    },
+    {
+      "PK": "GROUP#1774704704757",
+      "SK": "EXPENSE#1774704852155",
+      "description": "sample",
+      "amount": 100,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 50
+        },
+        {
+          "userId": "friend-1770552615433",
+          "amount": 50
+        }
+      ],
+      "paidBy": "local-user-123",
+      "createdAt": "2026-03-28T13:34:12.155Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "EXPENSE#1774704871221",
+      "description": "sample",
+      "amount": 100,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 33.33
+        },
+        {
+          "userId": "friend-1774672142061",
+          "amount": 33.34
+        },
+        {
+          "userId": "friend-1770552615433",
+          "amount": 33.33
+        }
+      ],
+      "paidBy": "local-user-123",
+      "createdAt": "2026-03-28T13:34:31.221Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "EXPENSE#1774704893733",
+      "description": "23",
+      "amount": 100,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "local-user-123",
+          "amount": 33.33
+        },
+        {
+          "userId": "friend-1774672142061",
+          "amount": 33.34
+        },
+        {
+          "userId": "friend-1770552615433",
+          "amount": 33.33
+        }
+      ],
+      "paidBy": "local-user-123",
+      "createdAt": "2026-03-28T13:34:53.733Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "EXPENSE#1774705158214",
+      "description": "movie",
+      "amount": 1000,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "friend-1774672142061",
+          "amount": 333.34
+        },
+        {
+          "userId": "friend-1770552615433",
+          "amount": 333.33
+        },
+        {
+          "userId": "local-user-123",
+          "amount": 333.33
+        }
+      ],
+      "paidBy": "friend-1770552615433",
+      "createdAt": "2026-03-28T13:39:18.214Z",
+      "updatedAt": "2026-03-28T13:57:21.497Z"
+    },
+    {
+      "PK": "GROUP#1774704835909",
+      "SK": "EXPENSE#1774705720825",
+      "description": "abc",
+      "amount": 100,
+      "splitType": "Exact",
+      "splitWith": [
+        {
+          "userId": "friend-1770552615433",
+          "amount": 0
+        },
+        {
+          "userId": "friend-1774672142061",
+          "amount": 50
+        },
+        {
+          "userId": "local-user-123",
+          "amount": 50
+        }
+      ],
+      "paidBy": "friend-1774672142061",
+      "createdAt": "2026-03-28T13:48:40.825Z",
+      "updatedAt": "2026-03-28T13:56:39.960Z"
     }
   ]
 }

@@ -1,0 +1,7 @@
+EvenUp Local Backend running at http://localhost:3000
+(node:67286) NOTE: The AWS SDK for JavaScript (v2) has reached end-of-support.
+It will no longer receive updates or releases.
+
+Please migrate your code to use AWS SDK for JavaScript (v3).
+For more information, check the blog post at https://a.co/cUPnyil
+(Use `node --trace-warnings ...` to show where the warning was created)

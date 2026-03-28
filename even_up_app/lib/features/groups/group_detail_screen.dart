@@ -149,14 +149,21 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
         ),
       ),
       child: SafeArea(
-        child: FutureBuilder<List<Expense>>(
-          future: expensesFuture,
+        child: FutureBuilder<List<dynamic>>(
+          future: Future.wait([expensesFuture, groupFuture]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CupertinoActivityIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            } else if (!snapshot.hasData) {
+              return const Center(child: Text('No data found'));
+            }
+
+            final List<Expense> expenses = snapshot.data![0];
+            final Group group = snapshot.data![1];
+
+            if (expenses.isEmpty) {
               return const Center(
                 child: Text(
                   'No expenses yet',
@@ -165,12 +172,27 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               );
             }
 
-            final expenses = snapshot.data!;
             return ListView.builder(
               itemCount: expenses.length,
               itemBuilder: (context, index) {
                 final expense = expenses[index];
                 const currentUserId = 'local-user-123';
+                
+                String payerName = 'Unknown';
+                if (expense.paidBy == currentUserId) {
+                  payerName = 'You';
+                } else if (group.members != null) {
+                  for (var m in group.members!) {
+                    if (m.id == expense.paidBy) {
+                      payerName = m.name;
+                      break;
+                    }
+                  }
+                }
+                
+                if (payerName == 'Unknown' && expense.paidBy.startsWith('friend-')) {
+                   payerName = 'Friend ${expense.paidBy.split('-').last}';
+                }
 
                 String balanceText = '';
                 Color balanceColor = CupertinoColors.label;
@@ -200,20 +222,18 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                 }
 
                 return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
+                  onTap: () async {
+                    final result = await Navigator.of(context).push(
                       CupertinoPageRoute(
-                        builder: (context) => FutureBuilder<Group>(
-                          future: groupFuture,
-                          builder: (context, groupSnapshot) {
-                            return ExpenseDetailScreen(
-                              expense: expense,
-                              groupMembers: groupSnapshot.data?.members,
-                            );
-                          },
+                        builder: (context) => ExpenseDetailScreen(
+                          expense: expense,
+                          groupMembers: group.members,
                         ),
                       ),
                     );
+                    if (result == true) {
+                      _refreshData();
+                    }
                   },
                   child: CupertinoListTile(
                     padding: const EdgeInsets.symmetric(
@@ -260,7 +280,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      '${expense.paidBy == currentUserId ? "You" : expense.paidBy} paid ₹${expense.amount.toStringAsFixed(2)}',
+                      '$payerName paid ₹${expense.amount.toStringAsFixed(2)}',
                       style: const TextStyle(fontSize: 13),
                     ),
                     trailing: Text(

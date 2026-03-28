@@ -7,6 +7,7 @@ class Group {
   final DateTime createdAt;
   final List<GroupMember>? members;
   final String? icon;
+  final Map<String, double>? memberBalances;
 
   Group({
     required this.id,
@@ -15,6 +16,7 @@ class Group {
     required this.createdAt,
     this.members,
     this.icon,
+    this.memberBalances,
   });
 
   factory Group.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,13 @@ class Group {
           ? (json['members'] as List).map((m) => GroupMember.fromJson(m)).toList()
           : null,
       icon: _safeString(json['icon'], defaultValue: 'group'),
+      memberBalances: json['memberBalances'] != null 
+          ? Map<String, double>.from(
+              (json['memberBalances'] as Map).map(
+                (k, v) => MapEntry(k.toString(), (v as num).toDouble()),
+              ),
+            )
+          : null,
     );
   }
 
