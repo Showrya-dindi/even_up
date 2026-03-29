@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/group.dart';
 import 'package:even_up_app/core/models/expense.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/features/expenses/expense_detail_screen.dart';
 import 'package:even_up_app/features/groups/add_member_screen.dart';
 import 'package:even_up_app/features/groups/group_info_screen.dart';
@@ -44,6 +45,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     try {
       final response = await http.get(
         Uri.parse('${AppConfig.baseUrl}/groups/${widget.group.id}/expenses'),
+        headers: UserSession.instance.authHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -62,6 +64,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     try {
       final response = await http.get(
         Uri.parse('${AppConfig.baseUrl}/groups/${widget.group.id}'),
+        headers: UserSession.instance.authHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -176,7 +179,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               itemCount: expenses.length,
               itemBuilder: (context, index) {
                 final expense = expenses[index];
-                const currentUserId = 'local-user-123';
+                final currentUserId = UserSession.instance.userId;
                 
                 String payerName = 'Unknown';
                 if (expense.paidBy == currentUserId) {

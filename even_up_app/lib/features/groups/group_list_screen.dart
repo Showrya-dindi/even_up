@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/group.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/features/groups/group_detail_screen.dart';
 import 'package:even_up_app/core/active_state.dart';
 
@@ -76,7 +77,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                       color: CupertinoColors.systemOrange,
                     ),
                     title: Text(group.name),
-                    subtitle: Text(group.createdBy == 'local-user-123' ? 'You created this' : 'Added by ${group.createdBy}'),
+                    subtitle: Text(group.createdBy == UserSession.instance.userId ? 'You created this' : 'Added by ${group.createdBy}'),
                     trailing: const CupertinoListTileChevron(),
                     onTap: () {
                       Navigator.of(context).push(

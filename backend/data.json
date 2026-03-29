@@ -335,6 +335,126 @@
       "paidBy": "friend-1774672142061",
       "createdAt": "2026-03-28T13:48:40.825Z",
       "updatedAt": "2026-03-28T13:56:39.960Z"
+    },
+    {
+      "PK": "USER#showrya.dindi@gmail.com",
+      "SK": "PROFILE",
+      "userId": "user-1774780561091",
+      "email": "showrya.dindi@gmail.com",
+      "name": "Showrya",
+      "passwordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-03-29T10:36:01.097Z"
+    },
+    {
+      "PK": "USER#harsha@gmail.com",
+      "SK": "PROFILE",
+      "userId": "user-1774780658642",
+      "email": "harsha@gmail.com",
+      "name": "Harsha",
+      "passwordHash": "4a9ca4596692e94f9d2912b06a0d007564a22ee750339a6021c2392149b25d6d",
+      "createdAt": "2026-03-29T10:37:38.644Z"
+    },
+    {
+      "PK": "FRIEND#friend-1774780692193",
+      "SK": "METADATA",
+      "id": "friend-1774780692193",
+      "name": "Showrya",
+      "email": "showrya.dindi@gmail.com",
+      "createdAt": "2026-03-29T10:38:12.193Z"
+    },
+    {
+      "PK": "GROUP#1774780717428",
+      "SK": "METADATA",
+      "name": "sample group",
+      "icon": "group",
+      "createdBy": "user-1774780658642",
+      "createdAt": "2026-03-29T10:38:37.429Z"
+    },
+    {
+      "PK": "GROUP#1774780717428",
+      "SK": "MEMBERS#user-1774780658642",
+      "joinedAt": "2026-03-29T10:38:37.429Z"
+    },
+    {
+      "PK": "USER#user-1774780658642#FRIENDS",
+      "SK": "FRIEND#user-1774780561091",
+      "friendId": "user-1774780561091",
+      "name": "Showrya",
+      "email": "showrya.dindi@gmail.com",
+      "createdAt": "2026-03-29T10:38:12.193Z"
+    },
+    {
+      "PK": "GROUP#1774780717428",
+      "SK": "EXPENSE#1774781377576",
+      "description": "burger",
+      "amount": 100,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "user-1774780561091",
+          "amount": 50
+        },
+        {
+          "userId": "user-1774780658642",
+          "amount": 50
+        }
+      ],
+      "paidBy": "user-1774780561091",
+      "createdAt": "2026-03-29T10:49:37.576Z"
+    },
+    {
+      "PK": "FRIEND#friend-1774782679430",
+      "SK": "METADATA",
+      "id": "friend-1774782679430",
+      "name": "ijk",
+      "email": "ijk@gmail.com",
+      "createdAt": "2026-03-29T11:11:19.430Z"
+    },
+    {
+      "PK": "USER#ijk@gmail.com",
+      "SK": "PROFILE",
+      "userId": "user-1774782706355",
+      "email": "ijk@gmail.com",
+      "name": "ijk",
+      "passwordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-03-29T11:11:46.356Z"
+    },
+    {
+      "PK": "USER#user-1774782706355#FRIENDS",
+      "SK": "FRIEND#user-1774780561091",
+      "friendId": "user-1774780561091",
+      "name": "Showrya",
+      "email": "showrya.dindi@gmail.com",
+      "status": "ACCEPTED",
+      "createdAt": "2026-03-29T11:28:52.161Z"
+    },
+    {
+      "PK": "USER#abc@gmail.com",
+      "SK": "PROFILE",
+      "userId": "user-1774783793368",
+      "email": "abc@gmail.com",
+      "name": "abc1",
+      "passwordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-03-29T11:29:53.368Z"
+    },
+    {
+      "PK": "GROUP#1774780717428",
+      "SK": "EXPENSE#1774787155939",
+      "description": "burger",
+      "amount": 100,
+      "splitType": "Equally",
+      "splitWith": [
+        {
+          "userId": "user-1774780561091",
+          "amount": 50
+        },
+        {
+          "userId": "user-1774780658642",
+          "amount": 50
+        }
+      ],
+      "paidBy": "user-1774780561091",
+      "createdAt": "2026-03-29T12:25:55.940Z"
     }
   ]
 }

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/core/models/expense.dart';
 import 'package:even_up_app/core/models/group.dart';
 import 'package:even_up_app/core/models/group_member.dart';
@@ -59,7 +60,10 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
     try {
       final url = '${AppConfig.baseUrl}/groups/${widget.expense.groupId}';
       debugPrint('ExpenseDetailScreen: Fetching members from $url');
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(
+        Uri.parse(url),
+        headers: UserSession.instance.authHeaders,
+      );
 
       if (response.statusCode == 200) {
         final group = Group.fromJson(jsonDecode(response.body));

@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:even_up_app/features/dashboard/dashboard_screen.dart';
 import 'package:even_up_app/features/friends/friends_screen.dart';
-import 'package:even_up_app/features/activity/activity_screen.dart';
+import 'package:even_up_app/features/genie/genie_screen.dart';
 import 'package:even_up_app/features/account/account_screen.dart';
 import 'package:even_up_app/features/expenses/add_expense_screen.dart';
+import 'package:even_up_app/core/user_session.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,19 +19,26 @@ class _HomeScreenState extends State<HomeScreen> {
     GlobalKey<NavigatorState>(debugLabel: 'Navigator Groups'),
     GlobalKey<NavigatorState>(debugLabel: 'Navigator Friends'),
     GlobalKey<NavigatorState>(debugLabel: 'Navigator Add'),
-    GlobalKey<NavigatorState>(debugLabel: 'Navigator Activity'),
+    GlobalKey<NavigatorState>(debugLabel: 'Navigator Genie'),
     GlobalKey<NavigatorState>(debugLabel: 'Navigator Account'),
   ];
-  late final List<Widget> _screens;
+
+  // Getter to prevent crashes during hot-reload when existing tab views
+  // still refer to the old variable name.
+  List<Widget> get _screens => _buildScreens();
 
   @override
   void initState() {
     super.initState();
-    _screens = [
+    UserSession.instance.refreshPendingRequestCount();
+  }
+
+  List<Widget> _buildScreens() {
+    return [
       const DashboardScreen(),
       const FriendsScreen(),
       AddExpenseScreen(tabController: _tabController),
-      const ActivityScreen(),
+      const GenieScreen(),
       const AccountScreen(),
     ];
   }
@@ -54,25 +62,49 @@ class _HomeScreenState extends State<HomeScreen> {
       controller: _tabController,
       tabBar: CupertinoTabBar(
         onTap: _onTap,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.group),
             label: 'Groups',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person_2),
             label: 'Friends',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.add_circled_solid, size: 32),
             label: 'Add',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.bolt_fill),
-            label: 'Activity',
+          const BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.sparkles, size: 32),
+            label: 'Genie',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_circle),
+            icon: ListenableBuilder(
+              listenable: UserSession.instance,
+              builder: (context, _) {
+                final count = UserSession.instance.pendingRequestCount;
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    const Icon(CupertinoIcons.person_circle),
+                    if (count > 0)
+                      Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          decoration: const BoxDecoration(
+                            color: CupertinoColors.destructiveRed,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
             label: 'Account',
           ),
         ],
@@ -81,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return CupertinoTabView(
           key: ValueKey('TabView_$index'),
           navigatorKey: _navigatorKeys[index],
-          builder: (context) => _screens[index],
+          builder: (context) => _buildScreens()[index],
         );
       },
     );

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/friend.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/core/active_state.dart';
 
 class CreateGroupScreen extends StatefulWidget {
@@ -28,7 +29,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   Future<void> _fetchFriends() async {
     try {
-      final response = await http.get(Uri.parse('${AppConfig.baseUrl}/friends'));
+      final response = await http.get(
+        Uri.parse('${AppConfig.baseUrl}/friends'),
+        headers: UserSession.instance.authHeaders,
+      );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         if (mounted) {
@@ -47,10 +51,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
     setState(() => _isLoading = true);
     try {
-      final members = ['local-user-123', ..._selectedMemberIds];
+      final members = [UserSession.instance.userId, ..._selectedMemberIds];
       final response = await http.post(
         Uri.parse('${AppConfig.baseUrl}/groups'),
-        headers: {'Content-Type': 'application/json'},
+        headers: UserSession.instance.authHeaders,
         body: jsonEncode({
           'name': _nameController.text,
           'members': members,

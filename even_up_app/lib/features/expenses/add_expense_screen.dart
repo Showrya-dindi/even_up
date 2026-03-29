@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/group.dart';
 import 'package:even_up_app/core/models/group_member.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/core/active_state.dart';
 import 'package:flutter/material.dart'
     show showModalBottomSheet, RoundedRectangleBorder, Radius;
@@ -36,7 +37,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Set<String> _selectedMemberIds = {};
   final Map<String, TextEditingController> _exactAmountControllers = {};
 
-  String _paidByUserId = 'local-user-123';
+  String _paidByUserId = UserSession.instance.userId;
   bool _isRecalculating = false;
   List<String> _memberOrder = [];
   String? _selectedCurrencyVal;
@@ -45,7 +46,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   @override
   void initState() {
     super.initState();
-    _paidByUserId = widget.expense?.paidBy ?? 'local-user-123';
+    _paidByUserId = widget.expense?.paidBy ?? UserSession.instance.userId;
     _availableGroups = [];
     _selectedGroupId = widget.expense?.groupId ?? widget.groupId ?? activeGroupState.currentGroupId;
     _groupScrollController = ScrollController();
@@ -282,7 +283,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     if (!mounted) return;
     setState(() => _isFetchingGroups = true);
     try {
-      final response = await http.get(Uri.parse('${AppConfig.baseUrl}/groups'));
+      final response = await http.get(
+        Uri.parse('${AppConfig.baseUrl}/groups'),
+        headers: UserSession.instance.authHeaders,
+      );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         if (mounted) {
@@ -346,10 +350,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       final url = Uri.parse('${AppConfig.baseUrl}/expenses');
       final response = await (widget.expense == null
           ? http.post(url,
-              headers: {'Content-Type': 'application/json'},
+              headers: UserSession.instance.authHeaders,
               body: jsonEncode(expenseData))
           : http.put(url,
-              headers: {'Content-Type': 'application/json'},
+              headers: UserSession.instance.authHeaders,
               body: jsonEncode(expenseData)));
 
       debugPrint('AddExpenseScreen: Save response status: ${response.statusCode}');
@@ -407,7 +411,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       _splitType = 'Equally';
       _selectedMemberIds = {};
       _exactAmountControllers.clear();
-      _paidByUserId = 'local-user-123';
+      _paidByUserId = UserSession.instance.userId;
       _updateSelectedMembers();
     });
   }

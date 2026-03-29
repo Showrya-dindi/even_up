@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/friend.dart';
 import 'package:even_up_app/core/models/group.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/core/active_state.dart';
 
 class AddMemberScreen extends StatefulWidget {
@@ -28,7 +29,10 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
   Future<void> _fetchFriends() async {
     try {
-      final response = await http.get(Uri.parse('${AppConfig.baseUrl}/friends'));
+      final response = await http.get(
+        Uri.parse('${AppConfig.baseUrl}/friends'),
+        headers: UserSession.instance.authHeaders,
+      );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         if (mounted) {
@@ -49,7 +53,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
     try {
       final response = await http.post(
         Uri.parse('${AppConfig.baseUrl}/groups/members'),
-        headers: {'Content-Type': 'application/json'},
+        headers: UserSession.instance.authHeaders,
         body: jsonEncode({
           'groupId': widget.group.id,
           'members': _selectedMemberIds.toList(),

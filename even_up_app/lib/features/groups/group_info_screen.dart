@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:even_up_app/core/models/group.dart';
 import 'package:even_up_app/core/config.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/core/active_state.dart';
 
 class GroupInfoScreen extends StatelessWidget {
@@ -104,7 +105,7 @@ class GroupInfoScreen extends StatelessWidget {
   }
 
   Widget _buildActionsSection(BuildContext context) {
-    final isCreator = group.createdBy == 'local-user-123';
+    final isCreator = group.createdBy == UserSession.instance.userId;
 
     return CupertinoListSection.insetGrouped(
       children: [
@@ -143,10 +144,7 @@ class GroupInfoScreen extends StatelessWidget {
       debugPrint('UI: Sending LEAVE request for group ${group.id}');
       final response = await http.post(
         Uri.parse('${AppConfig.baseUrl}/groups/${group.id}/leave'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: UserSession.instance.authHeaders,
       );
 
       debugPrint('UI: LEAVE response status: ${response.statusCode}');
@@ -174,10 +172,7 @@ class GroupInfoScreen extends StatelessWidget {
       debugPrint('UI: Sending DELETE request for group ${group.id}');
       final response = await http.delete(
         Uri.parse('${AppConfig.baseUrl}/groups/${group.id}'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: UserSession.instance.authHeaders,
       );
 
       debugPrint('UI: DELETE response status: ${response.statusCode}');

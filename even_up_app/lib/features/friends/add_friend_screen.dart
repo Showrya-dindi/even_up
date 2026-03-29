@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
+import 'package:even_up_app/core/user_session.dart';
 
 class AddFriendScreen extends StatefulWidget {
   const AddFriendScreen({super.key});
@@ -31,7 +32,7 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
     try {
       final response = await http.post(
         Uri.parse('${AppConfig.baseUrl}/friends'),
-        headers: {'Content-Type': 'application/json'},
+        headers: UserSession.instance.authHeaders,
         body: jsonEncode({
           'name': _nameController.text,
           'email': _emailController.text,

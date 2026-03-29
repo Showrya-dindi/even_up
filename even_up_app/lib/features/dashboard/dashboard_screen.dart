@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:even_up_app/core/config.dart';
 import 'package:even_up_app/core/models/group.dart';
+import 'package:even_up_app/core/user_session.dart';
 import 'package:even_up_app/features/groups/create_group_screen.dart';
 import 'package:even_up_app/features/groups/group_detail_screen.dart';
-
 import 'package:even_up_app/core/active_state.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -33,7 +33,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<List<Group>> _fetchGroups() async {
-    final response = await http.get(Uri.parse('${AppConfig.baseUrl}/groups'));
+    final response = await http.get(
+      Uri.parse('${AppConfig.baseUrl}/groups'),
+      headers: UserSession.instance.authHeaders,
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
